@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMARTEC AI Hackfest</title>
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles - Dark AI Theme */
+        :root {
+            --bg: #050816;
+            --bg-alt: #0b1120;
+            --surface: rgba(15, 23, 42, 0.9);
+            --surface-soft: rgba(15, 23, 42, 0.7);
+            --primary: #3b82f6;          /* Electric blue */
+            --primary-soft: #60a5fa;
+            --secondary: #a855f7;        /* Neon purple */
+            --accent: #f97316;           /* Cyber orange */
+            --accent-soft: rgba(249, 115, 22, 0.35);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border-subtle: rgba(148, 163, 184, 0.35);
+            --glow-primary: 0 0 25px rgba(59, 130, 246, 0.4);
+            --glow-secondary: 0 0 25px rgba(168, 85, 247, 0.45);
+            --radius-lg: 18px;
+            --radius-pill: 999px;
+            --transition-fast: 0.18s ease-out;
+            --transition-med: 0.3s ease-out;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: radial-gradient(circle at top, #1f2937 0, #020617 55%, #000 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient background orbs */
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.28), transparent 60%);
+            filter: blur(4px);
+            opacity: 0.6;
+            z-index: -2;
+        }
+        body::before {
+            top: -120px;
+            left: -120px;
+        }
+        body::after {
+            bottom: -220px;
+            right: -80px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.32), transparent 60%);
+        }
+        
+        .container {
+            width: min(1120px, 100% - 32px);
+            margin: 0 auto;
+            padding: 0 8px;
+        }
+        
+        section {
+            padding: 72px 0;
+        }
+        
+        h1, h2, h3, h4 {
+            margin-bottom: 18px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        
+        h1 {
+            font-size: clamp(2.6rem, 4vw, 3.4rem);
+            background: linear-gradient(120deg, #e5e7eb, #93c5fd, #c4b5fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        h2 {
+            font-size: clamp(1.9rem, 3vw, 2.3rem);
+            color: #e5e7eb;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            font-size: 1.03rem;
+            color: var(--muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 11px 26px;
+            background: radial-gradient(circle at 0 0, var(--accent-soft) 0, transparent 50%),
+                        linear-gradient(120deg, var(--primary), var(--secondary));
+            color: #f9fafb;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            border-radius: var(--radius-pill);
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-med), border-color var(--transition-fast);
+            box-shadow: var(--glow-primary);
+            backdrop-filter: blur(18px);
+        }
+        
+        .btn i {
+            font-size: 0.95rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px) scale(1.01);
+            box-shadow: var(--glow-secondary);
+            border-color: rgba(251, 191, 36, 0.7);
+        }
+
+        /* Glassmorphism card */
+        .card {
+            background: linear-gradient(135deg, var(--surface-soft), rgba(15, 23, 42, 0.95));
+            border-radius: var(--radius-lg);
+            padding: 24px 22px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(22px);
+            transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 55%);
+            opacity: 0.9;
+            pointer-events: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.95);
+            border-color: rgba(59, 130, 246, 0.7);
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(24px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #e5e7eb;
+        }
+        
+        .logo i {
+            font-size: 1.5rem;
+            background: radial-gradient(circle, var(--primary) 0, var(--secondary) 30%, transparent 65%);
+            padding: 7px;
+            border-radius: 999px;
+            box-shadow: var(--glow-secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 18px;
+        }
+        
+        .nav-links li {
+            margin-left: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 8px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+        }
+        
+        .nav-links a:hover {
+            color: #e5e7eb;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 55%);
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 96px 0 72px;
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 60%),
+                        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.16), transparent 60%);
+        }
+        
+        .hero .container {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .hero p {
+            font-size: 1.08rem;
+            max-width: 560px;
+        }
+
+        .hero-subtitle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 11px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 18px;
+        }
+
+        .hero-subtitle span.dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 14px rgba(34, 197, 94, 0.85);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 26px;
+        }
+
+        .hero-secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            color: var(--muted);
+            background: rgba(15, 23, 42, 0.9);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .hero-secondary-btn:hover {
+            color: #e5e7eb;
+            border-color: rgba(96, 165, 250, 0.9);
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 55%);
+            transform: translateY(-1px);
+        }
+
+        /* Hero visual - AI hologram */
+        .hero-visual {
+            position: relative;
+            justify-self: center;
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 4 / 5;
+            border-radius: 34px;
+            padding: 18px;
+            background: radial-gradient(circle at 10% 0, rgba(59, 130, 246, 0.35), transparent 55%),
+                        radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.4), transparent 55%),
+                        rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.55);
+            box-shadow: 0 26px 70px rgba(15, 23, 42, 1);
+            overflow: hidden;
+        }
+
+        .hero-visual-inner {
+            height: 100%;
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.2), transparent 60%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neural-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
+
+        .neural-orbit {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.75);
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.85), transparent 70%);
+        }
+
+        .neural-orbit::before,
+        .neural-orbit::after {
+            content: "";
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            border-radius: inherit;
+            border: 1px dashed rgba(96, 165, 250, 0.4);
+            animation: spin 14s linear infinite;
+        }
+
+        .neural-orbit::after {
+            width: 150%;
+            height: 150%;
+            border-color: rgba(168, 85, 247, 0.4);
+            animation-duration: 22s;
+            animation-direction: reverse;
+        }
+
+        .neuron-core {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            background: radial-gradient(circle, #f97316 0, #facc15 35%, transparent 70%);
+            box-shadow: 0 0 28px rgba(249, 115, 22, 1);
+        }
+
+        .hero-visual-badges {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .hero-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .hero-chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            background: rgba(15, 23, 42, 0.95);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-chip span.dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        .hero-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.76rem;
+            color: var(--muted);
+            margin-top: 12px;
+        }
+
+        .hero-footer strong {
+            color: #e5e7eb;
+        }
+
+        /* About / Features */
+        .about {
+            background: transparent;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 26px;
+        }
+        
+        .feature {
+            text-align: left;
+            position: relative;
+        }
+        
+        .feature i {
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+            color: var(--primary-soft);
+        }
+
+        .feature h3 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .feature p {
+            font-size: 0.95rem;
+        }
+
+        /* Form Styles */
+        .form-section h2 {
+            margin-bottom: 8px;
+        }
+
+        .form-section > .container > p {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 500;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 11px 13px;
+            border-radius: 12px;
+            border: 1px solid rgba(51, 65, 85, 0.9);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            font-size: 0.96rem;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+        }
+        
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(148, 163, 184, 0.75);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: rgba(96, 165, 250, 0.9);
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
+            background: rgba(15, 23, 42, 0.96);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: rgba(148, 163, 184, 0.9);
+            margin-top: 4px;
+        }
+        
+        .slider-container {
+            margin-top: 6px;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.35), rgba(168, 85, 247, 0.6));
+            outline: none;
+            position: relative;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.55);
+        }
+        
+        .slider-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 0.78rem;
+            color: rgba(148, 163, 184, 0.9);
+        }
+        
+        .file-upload {
+            border-radius: 16px;
+            border: 1px dashed rgba(148, 163, 184, 0.75);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 60%),
+                        rgba(15, 23, 42, 0.9);
+        }
+        
+        .file-upload:hover {
+            border-color: rgba(96, 165, 250, 0.95);
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.26), transparent 60%),
+                        rgba(15, 23, 42, 0.96);
+            transform: translateY(-1px);
+        }
+        
+        .file-upload i {
+            font-size: 1.7rem;
+            color: var(--primary-soft);
+            margin-bottom: 7px;
+        }
+
+        .file-upload p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Success Page */
+        .success {
+            text-align: center;
+            padding: 96px 0 80px;
+        }
+        
+        .success i {
+            font-size: 3.8rem;
+            color: #22c55e;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 26px rgba(34, 197, 94, 0.8));
+        }
+
+        .success p {
+            max-width: 540px;
+            margin: 0 auto 6px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #020617;
+            color: var(--muted);
+            padding: 32px 0 24px;
+            text-align: center;
+            border-top: 1px solid rgba(30, 64, 175, 0.7);
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        footer i {
+            color: var(--accent);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero .container {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 0;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 56px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding-top: 80px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Utility animations */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>SMARTEC AI Hackfest</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#submit">Submit Idea</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content (changes based on page) -->
+    <main id="content">
+        <!-- Landing Page -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div>
+                    <div class="hero-subtitle">
+                        <span class="dot"></span>
+                        <span>Internal AI Innovation Hackfest</span>
+                    </div>
+                    <h1>SMARTEC AI Hackfest</h1>
+                    <p>Design, prototype and launch AI-powered ideas that transform how we work, decide and serve our customers across the globe.</p>
+                    <div class="hero-actions">
+                        <a href="#submit" class="btn">Submit Your Idea <i class="fas fa-rocket"></i></a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-visual-inner">
+                       <!-- Michelin logo inside AI hologram -->
+                        <div style="display:flex; justify-content:center; margin-top:18px; position:relative; z-index:1;">
+                            <img src="michelin-logo.jpg" alt="Michelin" style="max-width:140px; height:auto; filter: drop-shadow(0 0 16px rgba(15,23,42,0.9)); opacity:0.95;">
+                        </div>
+                        <div class="hero-visual-badges">
+                            <div class="hero-badge-row">
+                                <span class="hero-chip"><span class="dot"></span> Real‑time AI ideation</span>
+                                <span>by 2026 BS/EC</span>
+                            </div>
+                            <div class="hero-badge-row">
+                                <span>Use cases</span>
+                                <strong>AI for SDLC</br> AI For Ops</br> AI For Business</strong>
+                            </div>
+                        </div>
+                        <div class="hero-footer">
+                            <span>Model‑first thinking</span>
+                            <span><strong>Submit by: 30 June</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About the Hackathon</h2>
+                <p>The SMARTEC AI Hackfest is an internal innovation challenge designed to harness the creative power of our team to solve real-world problems using artificial intelligence.</p>
+                
+                <div class="features">
+                    <div class="feature card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Innovate</h3>
+                        <p>Bring your creative ideas to life and push the boundaries of what's possible with AI.</p>
+                    </div>
+                    <div class="feature card">
+                        <i class="fas fa-users"></i>
+                        <h3>Collaborate</h3>
+                        <p>Work with like-minded colleagues and form teams to develop innovative solutions.</p>
+                    </div>
+                    <div class="feature card">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Win Prizes</h3>
+                        <p>Get recognition for your ideas and win exciting prizes for the most innovative solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Submit Idea Form (initially hidden) -->
+        <section id="submit" class="form-section" style="display: none;">
+            <div class="container">
+                <h2>Submit Your Idea</h2>
+                <form id="idea-form" name="idea-submission" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="idea-submission">
+                    <p style="display:none;">
+                        <label>Don’t fill this out: <input name="bot-field"></label>
+                    </p>
+                    <div class="card">
+                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                        <div class="form-group">
+                            <label for="title">Idea / Initiative Title</label>
+                            <input type="text" id="title" name="title" required placeholder="Enter a short, simple name for your idea">
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Your Country</label>
+                            <select id="country" name="country" required>
+                                <option value="">Select your country</option>
+                                <option value="usa">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="canada">Canada</option>
+                                <option value="australia">Australia</option>
+                                <option value="germany">Germany</option>
+                                <option value="india">India</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-exclamation-circle"></i> Problem Statement</h3>
+                        <div class="form-group">
+                            <label for="problem">What problem are you addressing?</label>
+                            <textarea id="problem" name="problem" maxlength="1000" required placeholder="Describe the problem, its context, challenges, pain points, and inspiration behind your idea"></textarea>
+                            <div class="char-count"><span id="problem-chars">0</span>/1000 characters</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-lightbulb"></i> Proposed Solution</h3>
+                        <div class="form-group">
+                            <label for="solution">What solution are you proposing?</label>
+                            <textarea id="solution" name="solution" maxlength="1000" required placeholder="Describe your proposed solution in detail"></textarea>
+                            <div class="char-count"><span id="solution-chars">0</span>/1000 characters</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-image"></i> Visualization</h3>
+                        <div class="form-group">
+                            <label>Upload Photo / Diagram / Screenshot (Optional)</label>
+                            <div class="file-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload or drag and drop</p>
+                                <input type="file" id="visualization" name="visualization" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-users"></i> Impact</h3>
+                        <div class="form-group">
+                            <label for="impact">Who will benefit from your idea?</label>
+                            <textarea id="impact" name="impact" required placeholder="Describe the target audience and how they will benefit from your solution"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-chart-line"></i> Evaluation Metrics</h3>
+                        
+                        <div class="form-group">
+                            <label>User Experience Improvement</label>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="ux-slider" name="ux">
+                                <div class="slider-values">
+                                    <span>1 = Nice to have</span>
+                                    <span>10 = Must do</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Security Contribution</label>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="security-slider" name="security">
+                                <div class="slider-values">
+                                    <span>1 = No contribution</span>
+                                    <span>10 = Strong contribution</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Cost Reduction</label>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="cost-slider" name="cost">
+                                <div class="slider-values">
+                                    <span>1 = No reduction</span>
+                                    <span>10 = Huge reduction</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sustainability Impact</label>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="10" value="5" class="slider" id="sustainability-slider" name="sustainability">
+                                <div class="slider-values">
+                                    <span>1 = No contribution</span>
+                                    <span>10 = Huge contribution</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">
+                        Submit Idea <i class="fas fa-rocket"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Success Page (initially hidden) -->
+        <section id="success" class="success" style="display: none;">
+            <div class="container">
+                <i class="fas fa-check-circle"></i>
+                <h2>Thank You For Your Submission!</h2>
+                <p>Your idea has been successfully submitted to SMARTEC AI Hackfest!</p>
+                <p>Our team will review your submission and you'll hear from us soon.</p>
+                <div style="margin-top: 40px;">
+                    <a href="#home" class="btn" style="margin-right: 15px;">Back to Home</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SMARTEC AI Hackfest. All rights reserved.</p>
+            <p>Designed with <i class="fas fa-heart" style="color: var(--accent);"></i> Pramod Sultane</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Simple routing for the single page application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show home page by default
+            showSection('home');
+            
+            // Navigation click handlers
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href').substring(1);
+                    showSection(sectionId);
+                    
+                    // Update URL hash
+                    window.location.hash = sectionId;
+                });
+            });
+            
+            // Character counters for textareas
+            const problemTextarea = document.getElementById('problem');
+            const solutionTextarea = document.getElementById('solution');
+            const problemChars = document.getElementById('problem-chars');
+            const solutionChars = document.getElementById('solution-chars');
+            
+            problemTextarea.addEventListener('input', function() {
+                problemChars.textContent = this.value.length;
+            });
+            
+            solutionTextarea.addEventListener('input', function() {
+                solutionChars.textContent = this.value.length;
+            });
+            
+            // File upload styling
+            const fileUpload = document.querySelector('.file-upload');
+            const fileInput = document.getElementById('visualization');
+            
+            fileUpload.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileUpload.innerHTML = `<i class="fas fa-file-image"></i><p>${this.files[0].name}</p>`;
+                }
+            });
+            
+            // Form submission -> Netlify Forms
+            const form = document.getElementById('idea-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                fetch('/', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Show custom success view
+                    showSection('success');
+                    form.reset();
+                })
+                .catch((error) => {
+                    console.error('Form submission failed:', error);
+                    alert('There was an issue submitting your idea. Please try again.');
+                });
+            });
+            
+            // Handle initial URL hash
+            if (window.location.hash) {
+                const sectionId = window.location.hash.substring(1);
+                showSection(sectionId);
+            }
+        });
+        
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show the requested section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'block';
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            } else {
+                // Show home if section doesn't exist
+                document.getElementById('home').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
