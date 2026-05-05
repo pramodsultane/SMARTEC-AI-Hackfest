@@ -464,6 +464,19 @@
             margin-bottom: 20px;
         }
 
+        .form-embed-card {
+            padding: 14px;
+        }
+
+        .form-embed-frame {
+            display: block;
+            width: 100%;
+            min-height: 980px;
+            border: none;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -504,114 +517,9 @@
             resize: vertical;
         }
         
-        .char-count {
-            text-align: right;
-            font-size: 0.8rem;
-            color: rgba(148, 163, 184, 0.9);
-            margin-top: 4px;
-        }
+        /* ...existing code... */
         
-        .slider-container {
-            margin-top: 6px;
-        }
-        
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(0, 91, 187, 0.5), rgba(255, 201, 9, 0.85));
-            outline: none;
-            position: relative;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 999px;
-            background: #ffffff;
-            border: 2px solid var(--primary);
-            cursor: pointer;
-            box-shadow: 0 0 0 3px rgba(0, 91, 187, 0.45);
-            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.04);
-            box-shadow: 0 0 0 4px rgba(0, 91, 187, 0.55);
-        }
-        
-        .slider-values {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 4px;
-            font-size: 0.78rem;
-            color: rgba(148, 163, 184, 0.9);
-        }
-
-        /* numeric ticks 1-10 under sliders */
-        .slider-ticks {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 4px;
-            font-size: 0.75rem;
-            color: rgba(148, 163, 184, 0.85);
-            padding: 0 2px;
-        }
-
-        .slider-ticks span {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .file-upload {
-            border-radius: 16px;
-            border: 1px dashed rgba(148, 163, 184, 0.75);
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
-            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 60%),
-                        rgba(15, 23, 42, 0.9);
-        }
-        
-        .file-upload:hover {
-            border-color: rgba(96, 165, 250, 0.95);
-            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.26), transparent 60%),
-                        rgba(15, 23, 42, 0.96);
-            transform: translateY(-1px);
-        }
-        
-        .file-upload i {
-            font-size: 1.7rem;
-            color: var(--primary-soft);
-            margin-bottom: 7px;
-        }
-
-        .file-upload p {
-            margin-bottom: 0;
-            font-size: 0.9rem;
-        }
-        
-        /* Success Page */
-        .success {
-            text-align: center;
-            padding: 96px 0 80px;
-        }
-        
-        .success i {
-            font-size: 3.8rem;
-            color: #22c55e;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 26px rgba(34, 197, 94, 0.8));
-        }
-
-        .success p {
-            max-width: 540px;
-            margin: 0 auto 6px;
-        }
+        /* ...existing code... */
         
         /* Footer */
         footer {
@@ -742,6 +650,10 @@
             section {
                 padding: 56px 0;
             }
+
+            .form-embed-frame {
+                min-height: 860px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -752,6 +664,10 @@
             .hero-actions {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .form-embed-frame {
+                min-height: 760px;
             }
         }
 
@@ -806,7 +722,7 @@
                         <div class="hero-visual-badges">
                             <div class="hero-badge-row">
                                 <span class="hero-chip"><span class="dot"></span> Real‑time AI ideation</span>
-                                <span>by 2026 BS/EC</span>
+                                <span>by BS/EC</span>
                             </div>
                             <div class="hero-badge-row">
                                 <span>Use cases</span>
@@ -851,122 +767,21 @@
         <section id="submit" class="form-section" style="display: none;">
             <div class="container">
                 <h2>Submit Your Idea</h2>
-                <form id="idea-form" name="idea-submission" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
-                    <input type="hidden" name="form-name" value="idea-submission">
-                    <p style="display:none;">
-                        <label>Don’t fill this out: <input name="bot-field"></label>
-                    </p>
-                    <div class="card">
-                        <h3><i class="fas fa-info-circle"></i> Your Team Name</h3>
-                        <div class="form-group">
-                            <label for="team-name">Team Name</label>
-                            <input type="text" id="team-name" name="team-name" required placeholder="Enter your team name">
-                        </div>
-                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
-                        <div class="form-group">
-                            <label for="title">Idea / Initiative Title</label>
-                            <input type="text" id="title" name="title" required placeholder="Enter a short, simple name for your idea">
-                        </div>
-                        <div class="form-group">
-                            <label for="country">Your Country</label>
-                            <select id="country" name="country" required>
-                                <option value="">Select your country</option>
-                                <option value="india">India</option>
-                                <option value="france">France</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3><i class="fas fa-exclamation-circle"></i> Problem Statement</h3>
-                        <div class="form-group">
-                            <label for="problem">What problem are you addressing?</label>
-                            <textarea id="problem" name="problem" maxlength="1000" required placeholder="Describe the problem, its context, challenges, pain points, and inspiration behind your idea"></textarea>
-                            <div class="char-count"><span id="problem-chars">0</span>/1000 characters</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3><i class="fas fa-lightbulb"></i> Proposed Solution</h3>
-                        <div class="form-group">
-                            <label for="solution">What solution are you proposing?</label>
-                            <textarea id="solution" name="solution" maxlength="1000" required placeholder="Describe your proposed solution in detail"></textarea>
-                            <div class="char-count"><span id="solution-chars">0</span>/1000 characters</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3><i class="fas fa-users"></i> Impact</h3>
-                        <div class="form-group">
-                            <label for="impact">Who will benefit from your idea?</label>
-                            <textarea id="impact" name="impact" required placeholder="Describe the target audience and how they will benefit from your solution"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3><i class="fas fa-chart-line"></i> Evaluation Metrics</h3>
-                        
-                        <div class="form-group">
-                            <label>User Experience Improvement</label>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="10" value="5" class="slider" id="ux-slider" name="ux">
-                                <div class="slider-ticks">
-                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-                                </div>
-                                <div class="slider-values">
-                                    <span>1 = Nice to have</span>
-                                    <span>10 = Must do</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Security Contribution</label>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="10" value="5" class="slider" id="security-slider" name="security">
-                                <div class="slider-ticks">
-                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-                                </div>
-                                <div class="slider-values">
-                                    <span>1 = No contribution</span>
-                                    <span>10 = Strong contribution</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Cost Reduction</label>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="10" value="5" class="slider" id="cost-slider" name="cost">
-                                <div class="slider-ticks">
-                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-                                </div>
-                                <div class="slider-values">
-                                    <span>1 = No reduction</span>
-                                    <span>10 = Huge reduction</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sustainability Impact</label>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="10" value="5" class="slider" id="sustainability-slider" name="sustainability">
-                                <div class="slider-ticks">
-                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-                                </div>
-                                <div class="slider-values">
-                                    <span>1 = No contribution</span>
-                                    <span>10 = Huge contribution</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">
-                        Submit Idea <i class="fas fa-rocket"></i>
-                    </button>
-                </form>
+                <p>Complete the embedded Microsoft Form below to submit your hackfest idea.</p>
+                <div class="card form-embed-card">
+                    <iframe
+                        class="form-embed-frame"
+                        src="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u&embed=true"
+                        title="SMARTEC AI Hackfest Submission Form"
+                        frameborder="0"
+                        marginwidth="0"
+                        marginheight="0"
+                        allowfullscreen
+                        webkitallowfullscreen
+                        mozallowfullscreen
+                        msallowfullscreen>
+                    </iframe>
+                </div>
             </div>
         </section>
 
@@ -983,7 +798,7 @@
                                 <span class="faq-icon"><i class="fas fa-chevron-right"></i></span>
                             </button>
                             <div class="faq-answer">
-                                <p>The Hackfest is open to BS/EC employees and eligible partners involved in digital, industrial, or business teams.</p>
+                                <p>The Hackfest is open to BS/EC employees and eligible partners involved in digital or business teams.</p>
                             </div>
                         </div>
                         <div class="faq-item">
@@ -1018,18 +833,7 @@
             </div>
         </section>
 
-        <!-- Success Page (initially hidden) -->
-        <section id="success" class="success" style="display: none;">
-            <div class="container">
-                <i class="fas fa-check-circle"></i>
-                <h2>Thank You For Your Submission!</h2>
-                <p>Your idea has been successfully submitted to SMARTEC AI Hackfest!</p>
-                <p>Our team will review your submission and you'll hear from us soon.</p>
-                <div style="margin-top: 40px;">
-                    <a href="#home" class="btn" style="margin-right: 15px;">Back to Home</a>
-                </div>
-            </div>
-        </section>
+        <!-- Success Page removed — submissions handled in Microsoft Forms -->
     </main>
 
     <!-- Footer -->
@@ -1060,51 +864,6 @@
                 });
             });
             
-            // Character counters for textareas
-            const problemTextarea = document.getElementById('problem');
-            const solutionTextarea = document.getElementById('solution');
-            const problemChars = document.getElementById('problem-chars');
-            const solutionChars = document.getElementById('solution-chars');
-            
-            if (problemTextarea && problemChars) {
-                problemTextarea.addEventListener('input', function() {
-                    problemChars.textContent = this.value.length;
-                });
-            }
-            
-            if (solutionTextarea && solutionChars) {
-                solutionTextarea.addEventListener('input', function() {
-                    solutionChars.textContent = this.value.length;
-                });
-            }
-            
-            // Form submission -> Netlify Forms
-            const form = document.getElementById('idea-form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch('/', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        // Show custom success view
-                        showSection('success');
-                        form.reset();
-                    })
-                    .catch((error) => {
-                        console.error('Form submission failed:', error);
-                        alert('There was an issue submitting your idea. Please try again.');
-                    });
-                });
-            }
-            
             // FAQ interactions (now top-level section)
             document.querySelectorAll('.faq-question').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1131,8 +890,8 @@
         });
         
         function showSection(sectionId) {
-            // Hide only top-level sections (home, about, submit, faq, success)
-            ['home', 'about', 'submit', 'faq', 'success'].forEach(id => {
+            // Hide only top-level sections (home, about, submit, faq)
+            ['home', 'about', 'submit', 'faq'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
