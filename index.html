@@ -3,908 +3,1846 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SMARTEC AI Hackfest — BS/EC Innovation Challenge. Submit your AI ideas and transform how we work.">
     <title>SMARTEC AI Hackfest</title>
-    <!-- Google Fonts: Poppins -->
+
+    <!-- Font strategy: preconnect first, then swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
     <style>
-        /* Base Styles - Michelin-inspired Dark Theme */
+        /* ============================================================
+           DESIGN TOKENS — single source of truth
+        ============================================================ */
         :root {
-            --bg: #00122b;                 /* Deep Michelin blue background */
-            --bg-alt: #001a3d;             /* Slightly lighter deep blue */
-            --surface: rgba(0, 24, 61, 0.94);
-            --surface-soft: rgba(0, 24, 61, 0.8);
-            --primary: #005bbb;            /* Michelin blue */
-            --primary-soft: #1e73d8;
-            --secondary: #ffc909;          /* Michelin yellow */
-            --accent: #ffda3a;             /* Softer yellow accent */
-            --accent-soft: rgba(255, 202, 9, 0.35);
-            --text: #f9fafb;
-            --muted: #cbd5f5;
-            --border-subtle: rgba(148, 163, 184, 0.5);
-            --glow-primary: 0 0 25px rgba(0, 91, 187, 0.6);
-            --glow-secondary: 0 0 25px rgba(255, 201, 9, 0.6);
-            --radius-lg: 18px;
-            --radius-pill: 999px;
-            --transition-fast: 0.18s ease-out;
-            --transition-med: 0.3s ease-out;
+            --bg:              #00122b;
+            --bg-alt:          #001a3d;
+            --surface:         rgba(0,24,61,0.94);
+            --surface-soft:    rgba(0,24,61,0.8);
+            --primary:         #005bbb;
+            --primary-soft:    #1e73d8;
+            --secondary:       #ffc909;
+            --accent:          #ffda3a;
+            --accent-soft:     rgba(255,202,9,0.35);
+            --text:            #f9fafb;
+            --muted:           #cbd5f5;
+            --border:          rgba(148,163,184,0.5);
+            --glow-blue:       0 0 25px rgba(0,91,187,0.6);
+            --glow-yellow:     0 0 25px rgba(255,201,9,0.6);
+            --radius-lg:       18px;
+            --radius-pill:     999px;
+            --ease-out:        cubic-bezier(0.22,1,0.36,1);
+
+            /* Light mode overrides (applied via class) */
+            --lm-bg:           #f0f4ff;
+            --lm-text:         #0f172a;
+            --lm-muted:        #475569;
+            --lm-surface:      rgba(255,255,255,0.9);
+            --lm-border:       rgba(51,65,85,0.25);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
+
+        /* ============================================================
+           LIGHT MODE
+        ============================================================ */
+        body.light-mode {
+            --bg: var(--lm-bg);
+            --bg-alt: #e2e9f9;
+            --surface: var(--lm-surface);
+            --surface-soft: rgba(255,255,255,0.75);
+            --text: var(--lm-text);
+            --muted: var(--lm-muted);
+            --border: var(--lm-border);
+            background: #eef2ff;
+            color: #0f172a;
+        }
+
+        body.light-mode header {
+            background: rgba(255,255,255,0.96);
+            border-bottom-color: rgba(0,91,187,0.3);
+        }
+
+        body.light-mode .nav-links a { color: #334155; }
+        body.light-mode .nav-links a:hover { color: #0f172a; }
+        body.light-mode footer { background: #0f172a; }
+
+        /* ============================================================
+           RESET & BASE
+        ============================================================ */
+        *, *::before, *::after {
+            margin: 0; padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
-        
+
+        html { scroll-behavior: smooth; }
+
         body {
+            font-family: 'Poppins', system-ui, sans-serif;
             background: radial-gradient(circle at top, #062042 0, #020617 55%, #000 100%);
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
-        body::before,
-        body::after {
+        /* Ambient light blobs */
+        body::before, body::after {
             content: "";
             position: fixed;
-            width: 520px;
-            height: 520px;
-            background: radial-gradient(circle, rgba(0, 91, 187, 0.32), transparent 60%);
-            filter: blur(4px);
-            opacity: 0.7;
+            width: 520px; height: 520px;
+            border-radius: 50%;
             z-index: -2;
+            pointer-events: none;
+            animation: blobFloat 14s ease-in-out infinite alternate;
         }
         body::before {
-            top: -120px;
-            left: -120px;
+            background: radial-gradient(circle, rgba(0,91,187,0.32), transparent 60%);
+            filter: blur(4px);
+            top: -120px; left: -120px;
         }
         body::after {
-            bottom: -220px;
-            right: -80px;
-            background: radial-gradient(circle, rgba(255, 201, 9, 0.38), transparent 60%);
+            background: radial-gradient(circle, rgba(255,201,9,0.38), transparent 60%);
+            filter: blur(4px);
+            bottom: -220px; right: -80px;
+            animation-delay: -7s;
         }
-        
+
+        @keyframes blobFloat {
+            from { transform: translate(0,0) scale(1); }
+            to   { transform: translate(40px,30px) scale(1.08); }
+        }
+
+        /* ============================================================
+           CANVAS PARTICLES (background)
+        ============================================================ */
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        /* ============================================================
+           LAYOUT
+        ============================================================ */
         .container {
             width: min(1120px, 100% - 32px);
             margin: 0 auto;
-            padding: 0 8px;
         }
-        
-        section {
-            padding: 72px 0;
-        }
-        
+
+        section { padding: 80px 0; }
+
+        /* ============================================================
+           TYPOGRAPHY
+        ============================================================ */
         h1, h2, h3, h4 {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             font-weight: 700;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.03em;
         }
-        
+
         h1 {
-            font-size: clamp(2.6rem, 4vw, 3.4rem);
-            background: linear-gradient(120deg, #ffffff, #ffda3a, #005bbb);
+            font-size: clamp(2.4rem, 4vw, 3.4rem);
+            background: linear-gradient(120deg, #fff, #ffda3a, #005bbb);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-        
-        h2 {
-            font-size: clamp(1.9rem, 3vw, 2.3rem);
-            color: #e5e7eb;
-        }
-        
-        p {
-            margin-bottom: 12px;
-            font-size: 1.03rem;
-            color: var(--muted);
-        }
 
-        /* Buttons */
+        h2 { font-size: clamp(1.8rem, 3vw, 2.3rem); color: #e5e7eb; }
+
+        p { margin-bottom: 12px; font-size: 1.03rem; color: var(--muted); }
+
+        /* ============================================================
+           BUTTON
+        ============================================================ */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 11px 26px;
-            background: radial-gradient(circle at 0 0, var(--accent-soft) 0, transparent 50%),
-                        linear-gradient(120deg, var(--primary), var(--secondary));
+            padding: 12px 28px;
+            background: linear-gradient(120deg, var(--primary), var(--secondary));
             color: #00122b;
-            border: 1px solid rgba(255, 219, 88, 0.85);
+            border: 1px solid rgba(255,219,88,0.85);
             border-radius: var(--radius-pill);
-            font-size: 0.98rem;
-            font-weight: 600;
+            font-size: 0.98rem; font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-med), border-color var(--transition-fast);
-            box-shadow: var(--glow-primary);
-            backdrop-filter: blur(18px);
-        }
-        
-        .btn i {
-            font-size: 0.95rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-1px) scale(1.01);
-            box-shadow: var(--glow-secondary);
-            border-color: rgba(255, 219, 88, 1);
+            transition: transform 0.18s var(--ease-out), box-shadow 0.18s, opacity 0.18s;
+            box-shadow: var(--glow-blue);
+            position: relative; overflow: hidden;
         }
 
-        /* Glassmorphism card */
+        .btn::after {
+            content: "";
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,0.15);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: var(--glow-yellow); }
+        .btn:hover::after { opacity: 1; }
+        .btn:active { transform: scale(0.97); }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 10px 22px;
+            box-shadow: none;
+        }
+        .btn-ghost:hover { border-color: rgba(96,165,250,0.9); color: var(--text); }
+
+        /* ============================================================
+           CARD
+        ============================================================ */
         .card {
-            background: linear-gradient(135deg, var(--surface-soft), rgba(0, 18, 43, 0.98));
+            background: linear-gradient(135deg, var(--surface-soft), rgba(0,18,43,0.98));
             border-radius: var(--radius-lg);
             padding: 24px 22px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 18px 45px rgba(2, 6, 23, 0.9);
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 45px rgba(2,6,23,0.9);
             backdrop-filter: blur(22px);
-            transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top left, rgba(0, 91, 187, 0.22), transparent 55%);
-            opacity: 0.9;
-            pointer-events: none;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 22px 60px rgba(2, 6, 23, 1);
-            border-color: rgba(0, 91, 187, 0.9);
+            transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+            position: relative; overflow: hidden;
         }
 
-        /* Header & Navigation */
-        header {
-            background: rgba(0, 18, 43, 0.96);
-            border-bottom: 1px solid rgba(0, 91, 187, 0.75);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(24px);
+        .card::before {
+            content: "";
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at top left, rgba(0,91,187,0.22), transparent 55%);
+            pointer-events: none;
         }
-        
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 26px 65px rgba(2,6,23,1);
+            border-color: rgba(0,91,187,0.9);
+        }
+
+        /* ============================================================
+           HEADER & NAV
+        ============================================================ */
+        header {
+            background: rgba(0,18,43,0.96);
+            border-bottom: 1px solid rgba(0,91,187,0.75);
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(24px);
+            transition: background 0.4s;
+        }
+
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 14px 0;
+            position: relative;
         }
-        
+
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #e5e7eb;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.2rem; font-weight: 700; color: #e5e7eb;
+            text-decoration: none;
         }
-        
+
         .logo i {
-            font-size: 1.5rem;
-            background: radial-gradient(circle, var(--secondary) 0, var(--primary) 35%, transparent 65%);
-            padding: 7px;
-            border-radius: 999px;
-            box-shadow: var(--glow-secondary);
-            color: #00122b;
+            font-size: 1.4rem;
+            background: radial-gradient(circle, var(--secondary) 0, var(--primary) 40%, transparent 70%);
+            padding: 7px; border-radius: 999px;
+            box-shadow: var(--glow-yellow); color: #00122b;
         }
-        
+
         .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 18px;
+            display: flex; list-style: none; gap: 4px; align-items: center;
         }
-        
-        .nav-links li {
-            margin-left: 0;
-        }
-        
+
         .nav-links a {
             text-decoration: none;
             color: var(--muted);
-            font-weight: 500;
-            font-size: 0.95rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 8px 10px;
+            font-weight: 500; font-size: 0.88rem;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 7px 12px;
             border-radius: var(--radius-pill);
             border: 1px solid transparent;
-            transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
-        }
-        
-        .nav-links a:hover {
-            color: #ffffff;
-            background: radial-gradient(circle at top, rgba(0, 91, 187, 0.3), transparent 55%);
-            border-color: rgba(255, 219, 88, 0.9);
+            transition: color 0.18s, background 0.18s, border-color 0.18s;
+            position: relative;
         }
 
-        /* Hero Section */
+        .nav-links a:hover, .nav-links a.active {
+            color: #fff;
+            background: rgba(0,91,187,0.25);
+            border-color: rgba(255,219,88,0.7);
+        }
+
+        /* Active indicator dot */
+        .nav-links a.active::after {
+            content: "";
+            position: absolute; bottom: 3px; left: 50%;
+            transform: translateX(-50%);
+            width: 4px; height: 4px; border-radius: 50%;
+            background: var(--secondary);
+        }
+
+        /* Theme toggle & hamburger */
+        .nav-controls {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .theme-toggle {
+            background: none; border: 1px solid var(--border);
+            color: var(--muted); padding: 7px 10px;
+            border-radius: var(--radius-pill);
+            cursor: pointer; font-size: 0.9rem;
+            transition: border-color 0.18s, color 0.18s, transform 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--secondary); color: var(--accent); transform: rotate(20deg); }
+
+        .hamburger {
+            display: none;
+            background: none; border: 1px solid var(--border);
+            color: var(--muted); padding: 7px 11px;
+            border-radius: var(--radius-pill); cursor: pointer;
+            font-size: 1rem; transition: border-color 0.18s, color 0.18s;
+        }
+        .hamburger:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Mobile nav drawer */
+        .mobile-nav {
+            display: none;
+            flex-direction: column; gap: 4px;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            animation: slideDown 0.22s var(--ease-out);
+        }
+
+        .mobile-nav.open { display: flex; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--muted); font-size: 0.95rem; font-weight: 500;
+            padding: 10px 14px; border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.18s;
+        }
+        .mobile-nav a:hover, .mobile-nav a.active {
+            background: rgba(0,91,187,0.2); border-color: rgba(0,91,187,0.5);
+            color: #fff;
+        }
+
+        /* ============================================================
+           PAGE TRANSITIONS
+        ============================================================ */
+        .page {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.38s var(--ease-out), transform 0.38s var(--ease-out);
+            pointer-events: none;
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+            animation: pageIn 0.38s var(--ease-out) forwards;
+        }
+
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           SCROLL REVEAL
+        ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered reveal for grid children */
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+        }
+
+        .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0s; }
+        .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 0.1s; }
+        .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay: 0.2s; }
+        .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay: 0.3s; }
+
+        /* ============================================================
+           HERO
+        ============================================================ */
         .hero {
             padding: 96px 0 72px;
-            background: radial-gradient(circle at top left, rgba(0, 91, 187, 0.25), transparent 60%),
-                        radial-gradient(circle at bottom right, rgba(255, 201, 9, 0.22), transparent 60%);
+            background:
+                radial-gradient(circle at top left, rgba(0,91,187,0.22), transparent 60%),
+                radial-gradient(circle at bottom right, rgba(255,201,9,0.18), transparent 60%);
         }
-        
+
         .hero .container {
             display: grid;
             grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-            gap: 40px;
+            gap: 44px;
             align-items: center;
-        }
-        
-        .hero p {
-            font-size: 1.08rem;
-            max-width: 560px;
         }
 
         .hero-subtitle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 11px;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 12px;
             border-radius: var(--radius-pill);
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(0, 18, 43, 0.9);
-            color: var(--muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            background: rgba(0,18,43,0.9);
+            color: var(--muted); font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.14em;
+            margin-bottom: 20px;
         }
 
-        .hero-subtitle span.dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
+        .dot-live {
+            width: 7px; height: 7px; border-radius: 50%;
             background: #22c55e;
-            box-shadow: 0 0 14px rgba(34, 197, 94, 0.85);
+            box-shadow: 0 0 10px #22c55e;
+            animation: pulse 2s infinite;
         }
 
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 26px;
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px #22c55e; }
+            50% { box-shadow: 0 0 20px #22c55e, 0 0 6px #22c55e; }
         }
 
-        .hero-secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-pill);
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            color: var(--muted);
-            background: rgba(15, 23, 42, 0.9);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+        /* Typewriter */
+        .typewriter-wrap { min-height: 1.4em; display: block; }
+        .typewriter {
+            border-right: 3px solid var(--accent);
+            animation: blink 0.7s step-end infinite;
+            white-space: nowrap; overflow: hidden;
         }
 
-        .hero-secondary-btn:hover {
-            color: #e5e7eb;
-            border-color: rgba(96, 165, 250, 0.9);
-            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 55%);
-            transform: translateY(-1px);
-        }
+        @keyframes blink { 50% { border-color: transparent; } }
 
-        /* Hero visual - AI hologram */
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+
+        /* Hero visual card */
         .hero-visual {
-            position: relative;
-            justify-self: center;
-            width: 100%;
-            max-width: 360px;
-            aspect-ratio: 4 / 5;
-            border-radius: 34px;
-            padding: 18px;
-            background: radial-gradient(circle at 10% 0, rgba(0, 91, 187, 0.4), transparent 55%),
-                        radial-gradient(circle at 90% 100%, rgba(255, 201, 9, 0.34), transparent 55%),
-                        rgba(0, 18, 43, 0.96);
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            box-shadow: 0 26px 70px rgba(2, 6, 23, 1);
+            position: relative; justify-self: center;
+            width: 100%; max-width: 360px; aspect-ratio: 4/5;
+            border-radius: 34px; padding: 18px;
+            background:
+                radial-gradient(circle at 10% 0, rgba(0,91,187,0.4), transparent 55%),
+                radial-gradient(circle at 90% 100%, rgba(255,201,9,0.34), transparent 55%),
+                rgba(0,18,43,0.96);
+            border: 1px solid var(--border);
+            box-shadow: 0 26px 70px rgba(2,6,23,1);
             overflow: hidden;
         }
 
         .hero-visual-inner {
-            height: 100%;
-            border-radius: 24px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
+            height: 100%; border-radius: 24px;
+            border: 1px solid rgba(148,163,184,0.4);
             padding: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.2), transparent 60%);
-            position: relative;
-            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
         }
 
         .neural-grid {
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(148,163,184,0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148,163,184,0.12) 1px, transparent 1px);
             background-size: 26px 26px;
             opacity: 0.6;
-            mix-blend-mode: screen;
+            animation: gridPan 20s linear infinite;
         }
 
-        .neural-orbit {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.75);
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.85), transparent 70%);
+        @keyframes gridPan {
+            from { background-position: 0 0; }
+            to   { background-position: 26px 26px; }
         }
 
-        .neural-orbit::before,
-        .neural-orbit::after {
-            content: "";
-            position: absolute;
-            width: 130%;
-            height: 130%;
-            border-radius: inherit;
-            border: 1px dashed rgba(96, 165, 250, 0.4);
-            animation: spin 14s linear infinite;
-        }
-
-        .neural-orbit::after {
-            width: 150%;
-            height: 150%;
-            border-color: rgba(168, 85, 247, 0.4);
-            animation-duration: 22s;
-            animation-direction: reverse;
-        }
-
-        .neuron-core {
-            width: 42px;
-            height: 42px;
-            border-radius: 999px;
-            background: radial-gradient(circle, #f97316 0, #facc15 35%, transparent 70%);
-            box-shadow: 0 0 28px rgba(249, 115, 22, 1);
-        }
-
-        .hero-visual-badges {
-            display: grid;
-            gap: 10px;
-            margin-top: 18px;
-        }
+        .hero-visual-badges { display: grid; gap: 10px; margin-top: 18px; }
 
         .hero-badge-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.78rem;
-            color: var(--muted);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.78rem; color: var(--muted);
         }
 
         .hero-chip {
-            padding: 6px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            background: rgba(15, 23, 42, 0.95);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .hero-chip span.dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 999px;
-            background: #22c55e;
+            padding: 6px 10px; border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(15,23,42,0.95);
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.76rem;
         }
 
         .hero-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.76rem;
-            color: var(--muted);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.76rem; color: var(--muted);
             margin-top: 12px;
         }
 
-        .hero-footer strong {
-            color: #e5e7eb;
+        .hero-footer strong { color: #e5e7eb; }
+
+        /* ============================================================
+           COUNTDOWN
+        ============================================================ */
+        .countdown-section {
+            padding: 40px 0 20px;
         }
 
-        /* About / Features */
-        .about {
-            background: transparent;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        .countdown-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 18px;
-            margin-top: 26px;
-        }
-        
-        .feature {
-            text-align: left;
-            position: relative;
-        }
-        
-        .feature i {
-            font-size: 1.6rem;
-            margin-bottom: 14px;
-            color: var(--primary-soft);
+            margin-top: 24px;
         }
 
-        .feature h3 {
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-        }
-
-        .feature p {
-            font-size: 0.95rem;
-        }
-
-        /* Form Styles */
-        .form-section h2 {
-            margin-bottom: 8px;
-        }
-
-        .form-section > .container > p {
-            margin-bottom: 20px;
-        }
-
-        .form-embed-card {
-            padding: 14px;
-        }
-
-        .form-embed-frame {
-            display: block;
-            width: 100%;
-            min-height: 980px;
-            border: none;
-            border-radius: 14px;
-            background: #ffffff;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: 500;
-            color: #e5e7eb;
-            font-size: 0.9rem;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 11px 13px;
-            border-radius: 12px;
-            border: 1px solid rgba(51, 65, 85, 0.9);
-            background: rgba(15, 23, 42, 0.9);
-            color: #e5e7eb;
-            font-size: 0.96rem;
-            transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-        }
-        
-        input::placeholder,
-        textarea::placeholder {
-            color: rgba(148, 163, 184, 0.75);
-        }
-        
-        input:focus, textarea:focus, select:focus {
-            border-color: rgba(96, 165, 250, 0.9);
-            outline: none;
-            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
-            background: rgba(15, 23, 42, 0.96);
-        }
-        
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        /* ...existing code... */
-        
-        /* ...existing code... */
-        
-        /* Footer */
-        footer {
-            background: #000814;
-            color: var(--muted);
-            padding: 32px 0 24px;
+        .countdown-unit {
             text-align: center;
-            border-top: 1px solid rgba(0, 91, 187, 0.8);
-            margin-top: 40px;
-        }
-        
-        footer p {
-            margin-bottom: 4px;
-            font-size: 0.85rem;
-        }
-
-        footer i {
-            color: var(--secondary);
+            background: linear-gradient(135deg, var(--surface-soft), rgba(0,18,43,0.98));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 30px;
+            min-width: 100px;
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(16px);
+            transition: border-color 0.3s, transform 0.2s;
         }
 
-        /* FAQ Section */
-        .faq-section {
-            background: transparent;
+        .countdown-unit:hover { border-color: var(--secondary); transform: translateY(-3px); }
+
+        .countdown-unit::before {
+            content: "";
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
-        .faq-section h2 {
+        .countdown-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.6rem; font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            display: block;
+            transition: transform 0.15s;
+        }
+
+        .countdown-unit.tick .countdown-num { animation: tickFlip 0.15s ease; }
+
+        @keyframes tickFlip {
+            0%   { transform: scaleY(0.8); opacity: 0.4; }
+            100% { transform: scaleY(1);   opacity: 1; }
+        }
+
+        .countdown-label {
+            font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.14em; color: var(--muted);
+            margin-top: 6px; display: block;
+        }
+
+        /* ============================================================
+           IDEA GALLERY
+        ============================================================ */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px; margin-top: 28px;
+        }
+
+        .idea-card { cursor: default; }
+
+        .idea-tag {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 999px; font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
             margin-bottom: 10px;
         }
 
-        .faq-intro {
-            color: var(--muted);
-            font-size: 0.98rem;
-            margin-bottom: 18px;
+        .tag-sdlc  { background: rgba(0,91,187,0.25); color: #93c5fd; border: 1px solid rgba(0,91,187,0.5); }
+        .tag-ops   { background: rgba(168,85,247,0.2); color: #c4b5fd; border: 1px solid rgba(168,85,247,0.5); }
+        .tag-biz   { background: rgba(255,201,9,0.15); color: #fde68a; border: 1px solid rgba(255,201,9,0.4); }
+
+        .idea-title { font-size: 1rem; font-weight: 600; color: #e5e7eb; margin-bottom: 8px; }
+
+        .idea-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 14px; font-size: 0.78rem; color: var(--muted);
         }
 
-        .faq-list {
-            display: grid;
-            gap: 12px;
+        .idea-votes {
+            display: flex; align-items: center; gap: 5px;
+            color: var(--secondary); font-weight: 600;
         }
+
+        /* ============================================================
+           SECTION DIVIDERS
+        ============================================================ */
+        .wave-divider { overflow: hidden; line-height: 0; }
+        .wave-divider svg { display: block; }
+
+        /* ============================================================
+           ABOUT PAGE CARDS
+        ============================================================ */
+        .features,
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 28px;
+            align-items: stretch;
+        }
+
+        .feature,
+        .why-item {
+            aspect-ratio: 1 / 1;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .why-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .why-item {
+            background: linear-gradient(135deg, var(--surface-soft), rgba(0,18,43,0.98));
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 22px;
+            box-shadow: 0 18px 45px rgba(2,6,23,0.9);
+            backdrop-filter: blur(22px);
+            transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .feature.card {
+            border-radius: 0;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 14px;
+        }
+
+        .feature h3,
+        .why-item h4 {
+            color: #e5e7eb;
+            margin-bottom: 10px;
+        }
+
+        .feature p,
+        .why-item p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .why-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 26px 65px rgba(2,6,23,1);
+            border-color: rgba(0,91,187,0.9);
+        }
+
+        @media (max-width: 1000px) {
+            .features,
+            .why-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .features,
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================
+           FORM SECTION
+        ============================================================ */
+        .form-guidance {
+            background: rgba(0,91,187,0.1);
+            border: 1px solid rgba(0,91,187,0.4);
+            border-radius: 14px; padding: 20px 22px; margin-bottom: 24px;
+        }
+
+        .form-guidance h4 { color: #93c5fd; font-size: 0.95rem; margin-bottom: 12px; }
+
+        .form-guidance ul { list-style: none; display: grid; gap: 8px; }
+
+        .form-guidance li {
+            display: flex; align-items: flex-start; gap: 10px;
+            font-size: 0.88rem; color: var(--muted);
+        }
+
+        .form-guidance li i { color: var(--secondary); margin-top: 2px; flex-shrink: 0; }
+
+        .form-cta-strip {
+            display: flex; flex-wrap: wrap;
+            align-items: center; justify-content: space-between;
+            gap: 14px; margin-bottom: 18px;
+            padding: 14px 18px;
+            background: linear-gradient(120deg, rgba(0,91,187,0.18), rgba(255,201,9,0.12));
+            border: 1px solid rgba(255,201,9,0.3);
+            border-radius: 12px;
+        }
+
+        .form-cta-strip p { margin: 0; font-size: 0.9rem; }
+
+        .iframe-wrapper { position: relative; border-radius: 14px; overflow: hidden; }
+
+        .iframe-skeleton {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg,
+                rgba(15,23,42,0.8) 25%,
+                rgba(30,60,90,0.5) 50%,
+                rgba(15,23,42,0.8) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 12px;
+            z-index: 2;
+        }
+
+        .iframe-skeleton.hidden { display: none; }
+
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .iframe-skeleton-text { color: var(--muted); font-size: 0.9rem; }
+
+        .form-embed-frame {
+            display: block; width: 100%; min-height: 980px;
+            border: none; border-radius: 14px; background: #fff;
+        }
+
+        /* ============================================================
+           FAQ
+        ============================================================ */
+        .faq-list { display: grid; gap: 10px; }
 
         .faq-item {
-            border-radius: 14px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(15, 23, 42, 0.9);
-            overflow: hidden;
-            transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+            border-radius: 14px; border: 1px solid var(--border);
+            background: rgba(15,23,42,0.9); overflow: hidden;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
 
         .faq-item.open {
-            border-color: rgba(0, 91, 187, 0.95);
-            background: radial-gradient(circle at top left, rgba(0, 91, 187, 0.24), transparent 60%), rgba(0, 18, 43, 0.98);
-            box-shadow: 0 14px 40px rgba(2, 6, 23, 0.95);
+            border-color: rgba(0,91,187,0.9);
+            background: radial-gradient(circle at top left, rgba(0,91,187,0.22), transparent 60%), rgba(0,18,43,0.98);
+            box-shadow: 0 12px 38px rgba(2,6,23,0.9);
             transform: translateY(-2px);
         }
 
         .faq-question {
-            width: 100%;
-            background: transparent;
-            border: none;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            color: #e5e7eb;
-            font-weight: 500;
-            font-size: 0.98rem;
-            text-align: left;
-            cursor: pointer;
+            width: 100%; background: transparent; border: none;
+            padding: 14px 18px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            color: #e5e7eb; font-weight: 600; font-size: 1.18rem;
+            text-align: left; cursor: pointer;
+            transition: background 0.18s;
         }
 
-        .faq-question span.label {
-            flex: 1;
-        }
+        .faq-question:hover { background: rgba(0,91,187,0.1); }
+        .faq-question:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 
         .faq-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; flex-shrink: 0;
+            transition: transform 0.25s, background 0.2s, border-color 0.2s;
         }
 
         .faq-item.open .faq-icon {
             transform: rotate(90deg);
-            background: rgba(59, 130, 246, 0.16);
-            border-color: rgba(59, 130, 246, 0.9);
+            background: rgba(59,130,246,0.15);
+            border-color: rgba(59,130,246,0.8);
         }
 
         .faq-answer {
-            max-height: 0;
+            max-height: 0; overflow: hidden;
+            padding: 0 18px;
+            color: var(--muted); font-size: 0.9rem;
+            transition: max-height 0.32s var(--ease-out), padding-bottom 0.32s;
+        }
+
+        .faq-item.open .faq-answer { padding-bottom: 16px; max-height: 300px; }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        footer {
+            background: #000814; color: var(--muted);
+            padding: 32px 0 24px;
+            text-align: center;
+            border-top: 1px solid rgba(0,91,187,0.8);
+            margin-top: 40px;
+        }
+
+        footer p { margin-bottom: 4px; font-size: 0.85rem; }
+        footer i  { color: var(--secondary); }
+
+        /* ============================================================
+           CONFETTI
+        ============================================================ */
+        .confetti-container {
+            position: fixed; inset: 0; pointer-events: none; z-index: 999;
             overflow: hidden;
-            padding: 0 16px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            transition: max-height 0.3s ease, padding-bottom 0.3s ease;
         }
 
-        .faq-item.open .faq-answer {
-            padding-bottom: 12px;
-            max-height: 200px;
+        .confetti-piece {
+            position: absolute; width: 8px; height: 14px;
+            top: -20px;
+            animation: confettiFall linear forwards;
+            border-radius: 2px;
         }
-        
-        /* Responsive Design */
+
+        @keyframes confettiFall {
+            to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
         @media (max-width: 900px) {
-            .hero .container {
-                grid-template-columns: minmax(0, 1fr);
-            }
-
-            .hero-visual {
-                order: -1;
-            }
+            .hero .container { grid-template-columns: 1fr; }
+            .hero-visual { order: -1; max-width: 300px; }
         }
 
         @media (max-width: 768px) {
-            nav {
-                padding: 12px 0;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            section {
-                padding: 56px 0;
-            }
-
-            .form-embed-frame {
-                min-height: 860px;
-            }
+            .nav-links { display: none !important; }
+            .hamburger { display: flex; }
+            section { padding: 56px 0; }
+            .form-embed-frame { min-height: 860px; }
         }
 
         @media (max-width: 480px) {
-            .hero {
-                padding-top: 80px;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-embed-frame {
-                min-height: 760px;
-            }
+            .hero { padding-top: 72px; }
+            .hero-actions { flex-direction: column; align-items: stretch; }
+            .countdown-unit { min-width: 70px; padding: 16px 18px; }
+            .countdown-num { font-size: 2rem; }
+            .form-embed-frame { min-height: 760px; }
         }
 
-        /* Utility animations */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* ============================================================
+           SECTION LABEL CHIP
+        ============================================================ */
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 14px;
+            border-radius: 999px; border: 1px solid var(--border);
+            background: rgba(0,18,43,0.9);
+            color: var(--muted); font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 0.14em;
+            margin-bottom: 14px;
         }
+
+        /* Progress bar for idea submission (localStorage) */
+        .progress-banner {
+            background: rgba(255,201,9,0.1); border: 1px solid rgba(255,201,9,0.35);
+            border-radius: 12px; padding: 12px 18px;
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px; font-size: 0.88rem;
+        }
+        .progress-banner i { color: var(--secondary); }
+        .progress-banner span { color: var(--muted); }
+        .progress-banner strong { color: #e5e7eb; }
+
+        /* Skip-to-content for a11y */
+        .skip-link {
+            position: absolute; top: -40px; left: 16px;
+            background: var(--secondary); color: #00122b;
+            padding: 6px 14px; border-radius: 0 0 10px 10px;
+            font-weight: 600; font-size: 0.9rem; text-decoration: none;
+            z-index: 9999; transition: top 0.2s;
+        }
+        .skip-link:focus { top: 0; }
     </style>
 </head>
 <body>
-    <!-- Header & Navigation -->
-    <header>
+    <!-- Accessibility: skip to main content -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <!-- Particle canvas -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- Confetti container -->
+    <div class="confetti-container" id="confetti-container" aria-hidden="true"></div>
+
+    <!-- ================================================================
+         HEADER
+    ================================================================ -->
+    <header role="banner">
         <div class="container">
-            <nav>
-                <div class="logo">
-                    <i class="fas fa-brain"></i>
+            <nav role="navigation" aria-label="Main navigation">
+                <a href="#home" class="logo" aria-label="SMARTEC AI Hackfest home">
+                    <i class="fas fa-brain" aria-hidden="true"></i>
                     <span>SMARTEC AI Hackfest</span>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#submit">Submit Idea</a></li>
-                    <li><a href="#faq">FAQ</a></li>
+                </a>
+
+                <ul class="nav-links" role="list">
+                    <li><a href="#home"    data-section="home"    class="nav-link active">Home</a></li>
+                    <li><a href="#about"   data-section="about"   class="nav-link">About</a></li>
+                    <li><a href="#submit"  data-section="submit"  class="nav-link">Submit</a></li>
+                    <li><a href="#faq"     data-section="faq"     class="nav-link">FAQ</a></li>
                 </ul>
+
+                <div class="nav-controls">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+                        <i class="fas fa-moon" id="theme-icon" aria-hidden="true"></i>
+                    </button>
+                    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+                        <i class="fas fa-bars" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Mobile nav -->
+            <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+                <a href="#home"    data-section="home"    class="mobile-link">🏠 Home</a>
+                <a href="#about"   data-section="about"   class="mobile-link">ℹ️ About</a>
+                <a href="#submit"  data-section="submit"  class="mobile-link">🚀 Submit Idea</a>
+                <a href="#faq"     data-section="faq"     class="mobile-link">❓ FAQ</a>
             </nav>
         </div>
     </header>
 
-    <!-- Main Content (changes based on page) -->
-    <main id="content">
-        <!-- Landing Page -->
-        <section id="home" class="hero">
-            <div class="container">
-                <div>
-                    <div class="hero-subtitle">
-                        <span class="dot"></span>
-                        <span>BS/EC AI Innovation Hackfest</span>
-                    </div>
-                    <h1>SMARTEC AI Hackfest</h1>
-                    <p>Design, prototype and launch AI-powered ideas that transform how we work, decide and serve our customers across the globe.</p>
-                    <div class="hero-actions">
-                        <a href="#submit" class="btn">Submit Your Idea <i class="fas fa-rocket"></i></a>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="hero-visual-inner">
-                       <!-- Michelin logo inside AI hologram -->
-                        <div style="display:flex; justify-content:center; margin-top:18px; position:relative; z-index:1;">
-                            <img src="michelin-logo.jpg" alt="Michelin" style="max-width:140px; height:auto; filter: drop-shadow(0 0 16px rgba(15,23,42,0.9)); opacity:0.95;">
-                        </div>
-                        <div class="hero-visual-badges">
-                            <div class="hero-badge-row">
-                                <span class="hero-chip"><span class="dot"></span> Real‑time AI ideation</span>
-                                <span>by BS/EC</span>
-                            </div>
-                            <div class="hero-badge-row">
-                                <span>Use cases</span>
-                                <strong>AI for SDLC</br> AI For Ops</br> AI For Business</strong>
-                            </div>
-                        </div>
-                        <div class="hero-footer">
-                            <span>Model‑first thinking</span>
-                            <span><strong>Submit by: 30 June</strong></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- ================================================================
+         MAIN CONTENT
+    ================================================================ -->
+    <main id="main-content">
 
-        <section id="about" class="about">
-            <div class="container">
-                <h2>About the Hackathon</h2>
-                <p>The SMARTEC AI Hackfest is an internal innovation challenge designed to harness the creative power of our team to solve real-world problems using artificial intelligence.</p>
-                
-                <div class="features">
-                    <div class="feature card">
-                        <i class="fas fa-lightbulb"></i>
-                        <h3>Innovate</h3>
-                        <p>Bring your creative ideas to life and push the boundaries of what's possible with AI.</p>
-                    </div>
-                    <div class="feature card">
-                        <i class="fas fa-users"></i>
-                        <h3>Collaborate</h3>
-                        <p>Work with like-minded colleagues and form teams to develop innovative solutions.</p>
-                    </div>
-                    <div class="feature card">
-                        <i class="fas fa-trophy"></i>
-                        <h3>Win Prizes</h3>
-                        <p>Get recognition for your ideas and win exciting prizes for the most innovative solutions.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- ==========================
+             HOME PAGE
+        ========================== -->
+        <div id="page-home" class="page active" role="main">
 
-        <!-- Submit Idea Form (initially hidden) -->
-        <section id="submit" class="form-section" style="display: none;">
-            <div class="container">
-                <h2>Submit Your Idea</h2>
-                <p>Complete the embedded Microsoft Form below to submit your hackfest idea.</p>
-                <div class="card form-embed-card">
-                    <iframe
-                        class="form-embed-frame"
-                        src="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u&embed=true"
-                        title="SMARTEC AI Hackfest Submission Form"
-                        frameborder="0"
-                        marginwidth="0"
-                        marginheight="0"
-                        allowfullscreen
-                        webkitallowfullscreen
-                        mozallowfullscreen
-                        msallowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </section>
+            <!-- HERO -->
+            <section class="hero" aria-labelledby="hero-heading">
+                <div class="container">
+                    <div>
+                        <div class="hero-subtitle" aria-label="Event status: Live">
+                            <span class="dot-live" aria-hidden="true"></span>
+                            <span>BS/EC AI Innovation Hackfest · Now Open</span>
+                        </div>
 
-        <!-- FAQ Page (separate from form) -->
-        <section id="faq" class="faq-section" style="display: none;">
-            <div class="container">
-                <div class="card">
-                    <h2>FAQ</h2>
-                    <p class="faq-intro">Find answers to common questions about how to participate in the SMARTEC AI Hackfest.</p>
-                    <div class="faq-list">
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">
-                                <span class="label">Who can participate?</span>
-                                <span class="faq-icon"><i class="fas fa-chevron-right"></i></span>
-                            </button>
-                            <div class="faq-answer">
-                                <p>The Hackfest is open to BS/EC employees and eligible partners involved in digital or business teams.</p>
-                            </div>
+                        <h1 id="hero-heading">SMARTEC<br>AI Hackfest</h1>
+
+                        <p>Design, prototype and launch AI-powered ideas that transform how we
+                            <span class="typewriter-wrap">
+                                <span id="typewriter" class="typewriter" aria-live="polite"></span>
+                            </span>
+                        </p>
+
+                        <div class="hero-actions">
+                            <a href="#submit" data-section="submit" class="btn nav-link">
+                                Submit Your Idea <i class="fas fa-rocket" aria-hidden="true"></i>
+                            </a>
+                            <a href="#about" data-section="about" class="btn btn-ghost nav-link">
+                                <i class="fas fa-info-circle" aria-hidden="true"></i> Learn More
+                            </a>
                         </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">
-                                <span class="label">Do I need to be an AI expert?</span>
-                                <span class="faq-icon"><i class="fas fa-chevron-right"></i></span>
-                            </button>
-                            <div class="faq-answer">
-                                <p>No. We welcome business, operations, and functional experts. AI mentors and resources will be available to support you.</p>
+                    </div>
+
+                    <div class="hero-visual" aria-hidden="true">
+                        <div class="hero-visual-inner">
+                            <div class="neural-grid"></div>
+                            <div style="display:flex;justify-content:center;margin-top:18px;position:relative;z-index:1;">
+                                <img src="michelin-logo.jpg" alt="Michelin"
+                                     style="max-width:140px;height:auto;filter:drop-shadow(0 0 16px rgba(15,23,42,0.9));opacity:0.95;"
+                                     loading="lazy" width="140">
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">
-                                <span class="label">Can I submit more than one idea?</span>
-                                <span class="faq-icon"><i class="fas fa-chevron-right"></i></span>
-                            </button>
-                            <div class="faq-answer">
-                                <p>Yes. You may submit multiple ideas, but please ensure each one is clearly differentiated and can be evaluated independently.</p>
+                            <div class="hero-visual-badges">
+                                <div class="hero-badge-row">
+                                    <span class="hero-chip">
+                                        <span class="dot-live" style="width:6px;height:6px;"></span>
+                                        Real-time AI ideation
+                                    </span>
+                                    <span>by BS/EC</span>
+                                </div>
+                                <div class="hero-badge-row">
+                                    <span>Use cases</span>
+                                    <strong>AI for SDLC<br>AI For Ops<br>AI For Business</strong>
+                                </div>
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">
-                                <span class="label">What kind of ideas are encouraged?</span>
-                                <span class="faq-icon"><i class="fas fa-chevron-right"></i></span>
-                            </button>
-                            <div class="faq-answer">
-                                <p>Ideas that improve efficiency, safety, customer experience, quality, or sustainability using AI and data are strongly encouraged.</p>
+                            <div class="hero-footer">
+                                <span>Model-first thinking</span>
+                                <span><strong>Submit by: 30 June</strong></span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Success Page removed — submissions handled in Microsoft Forms -->
+            <!-- WAVE DIVIDER -->
+            <div class="wave-divider" aria-hidden="true">
+                <svg viewBox="0 0 1200 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="50" width="100%">
+                    <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z"
+                          fill="rgba(0,91,187,0.08)"/>
+                </svg>
+            </div>
+
+            <!-- COUNTDOWN -->
+            <section class="countdown-section" aria-labelledby="countdown-heading">
+                <div class="container">
+                    <div class="section-label" aria-hidden="true">
+                        <i class="fas fa-clock"></i> Time Remaining
+                    </div>
+                    <h2 id="countdown-heading" class="reveal">Submission Deadline</h2>
+                    <p class="reveal" style="transition-delay:0.1s">Ideas accepted until <strong style="color:#e5e7eb">30 June 2026 at 23:59 IST</strong>. Don't miss your chance!</p>
+
+                    <div class="countdown-wrapper reveal-stagger" id="countdown" aria-label="Countdown timer" aria-live="polite">
+                        <div class="countdown-unit" id="cd-days">
+                            <span class="countdown-num" id="cd-d">--</span>
+                            <span class="countdown-label">Days</span>
+                        </div>
+                        <div class="countdown-unit" id="cd-hours">
+                            <span class="countdown-num" id="cd-h">--</span>
+                            <span class="countdown-label">Hours</span>
+                        </div>
+                        <div class="countdown-unit" id="cd-mins">
+                            <span class="countdown-num" id="cd-m">--</span>
+                            <span class="countdown-label">Minutes</span>
+                        </div>
+                        <div class="countdown-unit" id="cd-secs">
+                            <span class="countdown-num" id="cd-s">--</span>
+                            <span class="countdown-label">Seconds</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WAVE DIVIDER 2 -->
+            <div class="wave-divider" aria-hidden="true">
+                <svg viewBox="0 0 1200 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="40" width="100%">
+                    <path d="M0,0 C300,50 900,10 1200,40 L1200,60 L0,60 Z"
+                          fill="rgba(255,201,9,0.06)"/>
+                </svg>
+            </div>
+
+        </div>
+
+        <!-- ==========================
+             ABOUT PAGE
+        ========================== -->
+        <div id="page-about" class="page" role="main">
+            <section aria-labelledby="about-heading">
+                <div class="container">
+                    <div class="section-label"><i class="fas fa-info-circle"></i> About</div>
+                    <h2 id="about-heading">About the Hackathon</h2>
+                    <p>The SMARTEC AI Hackfest is an internal innovation challenge designed to harness the creative power of our team to solve real-world problems using artificial intelligence.</p>
+
+                    <div class="features reveal-stagger">
+                        <div class="feature card">
+                            <div class="feature-icon"><i class="fas fa-lightbulb" aria-hidden="true"></i></div>
+                            <h3>Innovate</h3>
+                            <p>Bring your creative ideas to life and push the boundaries of what's possible with AI.</p>
+                        </div>
+                        <div class="feature card">
+                            <div class="feature-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+                            <h3>Collaborate</h3>
+                            <p>Work with like-minded colleagues and form teams to develop innovative solutions.</p>
+                        </div>
+                        <div class="feature card">
+                            <div class="feature-icon"><i class="fas fa-trophy" aria-hidden="true"></i></div>
+                            <h3>Win Prizes</h3>
+                            <p>Get recognition for your ideas and win exciting prizes for the most innovative solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wave -->
+            <div class="wave-divider" aria-hidden="true">
+                <svg viewBox="0 0 1200 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="40" width="100%">
+                    <path d="M0,25 C400,50 800,0 1200,25 L1200,50 L0,50 Z" fill="rgba(0,91,187,0.07)"/>
+                </svg>
+            </div>
+
+            <!-- WHY PARTICIPATE -->
+            <section aria-labelledby="why-heading">
+                <div class="container">
+                    <div class="section-label"><i class="fas fa-star"></i> Why Join</div>
+                    <h2 id="why-heading" class="reveal">Why Participate?</h2>
+                    <p class="reveal" style="transition-delay:0.1s">This is more than a competition — it's a career-defining moment to shape the future of our organisation.</p>
+
+                    <div class="why-grid reveal-stagger">
+                        <div class="why-item">
+                            <h4><i class="fas fa-rocket" style="color:var(--secondary);margin-right:8px"></i>Accelerate Your Career</h4>
+                            <p>Get visibility with leadership and accelerate your professional growth by leading an AI initiative from idea to prototype.</p>
+                        </div>
+                        <div class="why-item">
+                            <h4><i class="fas fa-network-wired" style="color:var(--secondary);margin-right:8px"></i>Build Real Impact</h4>
+                            <p>Winning ideas get sponsored for full implementation — your prototype could become the next big product feature.</p>
+                        </div>
+                        <div class="why-item">
+                            <h4><i class="fas fa-brain" style="color:var(--secondary);margin-right:8px"></i>Learn From Experts</h4>
+                            <p>Access AI mentors, workshops and resources throughout the challenge — no prior AI expertise required.</p>
+                        </div>
+                        <div class="why-item">
+                            <h4><i class="fas fa-medal" style="color:var(--secondary);margin-right:8px"></i>Win Exciting Prizes</h4>
+                            <p>Top three teams receive recognition awards, innovation certificates, and exclusive SMARTEC swag.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================
+             IDEAS GALLERY PAGE
+        ========================== -->
+        <div id="page-gallery" class="page" role="main">
+            <section aria-labelledby="gallery-heading">
+                <div class="container">
+                    <div class="section-label"><i class="fas fa-th"></i> Idea Gallery</div>
+                    <h2 id="gallery-heading">Inspiration Board</h2>
+                    <p>Browse sample ideas from past participants to spark your own innovation. These are illustrative examples — we encourage entirely original thinking!</p>
+
+                    <div class="gallery-grid reveal-stagger" id="gallery-grid">
+                        <!-- Populated by JS from mock JSON -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================
+             SUBMIT PAGE
+        ========================== -->
+        <div id="page-submit" class="page" role="main">
+            <section aria-labelledby="submit-heading">
+                <div class="container">
+                    <div class="section-label"><i class="fas fa-paper-plane"></i> Submit</div>
+                    <h2 id="submit-heading">Submit Your Idea</h2>
+                    <p>Got an AI-powered idea that could transform our operations? We want to hear it.</p>
+
+                    <!-- Progress banner (shown if user has visited before) -->
+                    <div class="progress-banner" id="progress-banner" style="display:none">
+                        <i class="fas fa-history" aria-hidden="true"></i>
+                        <span>Welcome back, <strong id="progress-name">innovator</strong>! Ready to submit your idea?</span>
+                    </div>
+
+                    <!-- Pre-form guidance -->
+                    <div class="form-guidance reveal">
+                        <h4><i class="fas fa-magic" aria-hidden="true"></i> What makes a winning idea?</h4>
+                        <ul>
+                            <li><i class="fas fa-check" aria-hidden="true"></i>
+                                <span><strong>Clear problem statement</strong> — Describe the pain point and its business impact</span>
+                            </li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i>
+                                <span><strong>AI-first approach</strong> — Explain how AI specifically solves or accelerates this</span>
+                            </li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i>
+                                <span><strong>Feasibility</strong> — Show it's achievable with current technology within 3-6 months</span>
+                            </li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i>
+                                <span><strong>Measurable impact</strong> — Define KPIs: time saved, cost reduced, quality improved</span>
+                            </li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i>
+                                <span><strong>Category fit</strong> — Map it to AI for SDLC, AI for Ops, or AI for Business</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- CTA strip before form -->
+                    <div class="form-cta-strip reveal" style="transition-delay:0.1s">
+                        <p>🚀 <strong style="color:#e5e7eb">Ready to innovate?</strong> Fill out the form below — it takes about 5 minutes.</p>
+                        <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u"
+                           target="_blank" rel="noopener noreferrer"
+                           class="btn btn-ghost"
+                           onclick="Analytics.track('form_newtab_click')"
+                           aria-label="Open submission form in new tab">
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i> Open in New Tab
+                        </a>
+                    </div>
+
+                    <!-- Iframe with skeleton loader -->
+                    <div class="card" style="padding:14px;" role="region" aria-label="Submission form">
+                        <div class="iframe-wrapper">
+                            <div class="iframe-skeleton" id="iframe-skeleton" aria-hidden="true">
+                                <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--muted)"></i>
+                                <span class="iframe-skeleton-text">Loading submission form…</span>
+                            </div>
+                            <iframe
+                                id="submission-iframe"
+                                class="form-embed-frame"
+                                data-src="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u&embed=true"
+                                title="SMARTEC AI Hackfest Submission Form"
+                                frameborder="0"
+                                allowfullscreen
+                                aria-label="Microsoft Form for hackfest submissions">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================
+             FAQ PAGE
+        ========================== -->
+        <div id="page-faq" class="page" role="main">
+            <section aria-labelledby="faq-heading">
+                <div class="container">
+                    <div class="card">
+                        <div class="section-label"><i class="fas fa-question-circle"></i> FAQ</div>
+                        <h2 id="faq-heading">Frequently Asked Questions</h2>
+                        <p style="margin-bottom:24px;">Find answers to common questions about participating in the SMARTEC AI Hackfest.</p>
+
+                        <div class="faq-list" id="faq-list" role="list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
     </main>
 
-    <!-- Footer -->
-    <footer>
+    <!-- ================================================================
+         FOOTER
+    ================================================================ -->
+    <footer role="contentinfo">
         <div class="container">
             <p>&copy; 2026 SMARTEC AI Hackfest. All rights reserved.</p>
-            <p>Designed with <i class="fas fa-heart" style="color: var(--accent);"></i> Pramod Sultane</p>
+            <p>Designed with <i class="fas fa-heart" aria-hidden="true"></i> by Pramod Sultane</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- ================================================================
+         JAVASCRIPT — modular IIFE structure
+    ================================================================ -->
     <script>
-        // Simple routing for the single page application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show home page by default
-            showSection('home');
-            
-            // Navigation click handlers
-            document.querySelectorAll('a[href^="#"]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('href').substring(1);
+    'use strict';
 
-                    showSection(sectionId);
-                    
-                    // Update URL hash
-                    window.location.hash = sectionId;
+    /* ============================================================
+       MODULE: Analytics (mock, console-based)
+    ============================================================ */
+    const Analytics = (() => {
+        function track(event, data = {}) {
+            const payload = { event, timestamp: new Date().toISOString(), ...data };
+            console.info('[Analytics]', payload);
+        }
+        return { track };
+    })();
+
+    /* ============================================================
+       MODULE: Storage (localStorage wrapper with try/catch)
+    ============================================================ */
+    const Storage = (() => {
+        function get(key, fallback = null) {
+            try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; }
+            catch { return fallback; }
+        }
+        function set(key, value) {
+            try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+            catch { return false; }
+        }
+        return { get, set };
+    })();
+
+    /* ============================================================
+       MODULE: Router — SPA routing with smooth transitions
+    ============================================================ */
+    const Router = (() => {
+        const SECTIONS = ['home', 'about', 'gallery', 'submit', 'faq'];
+        let currentSection = 'home';
+
+        function navigate(section, pushState = true) {
+            if (!SECTIONS.includes(section)) section = 'home';
+            if (section === currentSection) return;
+
+            const prev = document.getElementById(`page-${currentSection}`);
+            const next = document.getElementById(`page-${section}`);
+            if (!next) return;
+
+            // Fade out current
+            if (prev) {
+                prev.style.opacity = '0';
+                prev.style.transform = 'translateY(8px)';
+                setTimeout(() => {
+                    prev.classList.remove('active');
+                    prev.style.opacity = '';
+                    prev.style.transform = '';
+                }, 200);
+            }
+
+            // Fade in next (slight delay)
+            setTimeout(() => {
+                next.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 150);
+
+            currentSection = section;
+            updateNav(section);
+
+            if (pushState) {
+                history.pushState({ section }, '', `#${section}`);
+            }
+
+            // Lifecycle hooks
+            onNavigate(section);
+            Analytics.track('page_view', { section });
+        }
+
+        function updateNav(section) {
+            document.querySelectorAll('.nav-link, .mobile-link').forEach(a => {
+                const s = a.dataset.section;
+                a.classList.toggle('active', s === section);
+                a.setAttribute('aria-current', s === section ? 'page' : 'false');
+            });
+        }
+
+        function onNavigate(section) {
+            if (section === 'submit') IframeLoader.load();
+            if (section === 'gallery') Gallery.render();
+            if (section === 'faq') FAQ.render();
+            // Re-trigger scroll observers for new page
+            setTimeout(() => ScrollReveal.refresh(), 100);
+        }
+
+        function init() {
+            // All nav links
+            document.querySelectorAll('[data-section]').forEach(el => {
+                el.addEventListener('click', e => {
+                    e.preventDefault();
+                    const s = el.dataset.section;
+                    navigate(s);
+                    MobileNav.close();
                 });
             });
-            
-            // FAQ interactions (now top-level section)
-            document.querySelectorAll('.faq-question').forEach(btn => {
+
+            // Browser back/forward
+            window.addEventListener('popstate', e => {
+                const s = (e.state && e.state.section) || 'home';
+                navigate(s, false);
+            });
+
+            // Initial route from hash
+            const hash = location.hash.replace('#', '');
+            if (hash && SECTIONS.includes(hash)) {
+                navigate(hash, false);
+            } else {
+                updateNav('home');
+            }
+        }
+
+        return { init, navigate };
+    })();
+
+    /* ============================================================
+       MODULE: MobileNav
+    ============================================================ */
+    const MobileNav = (() => {
+        let open = false;
+
+        function toggle() {
+            open = !open;
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.getElementById('hamburger');
+            nav.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open);
+            btn.querySelector('i').className = open ? 'fas fa-times' : 'fas fa-bars';
+        }
+
+        function close() {
+            open = false;
+            document.getElementById('mobile-nav').classList.remove('open');
+            const btn = document.getElementById('hamburger');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.querySelector('i').className = 'fas fa-bars';
+        }
+
+        function init() {
+            document.getElementById('hamburger').addEventListener('click', toggle);
+        }
+
+        return { init, close };
+    })();
+
+    /* ============================================================
+       MODULE: ThemeToggle
+    ============================================================ */
+    const ThemeToggle = (() => {
+        function apply(isLight) {
+            document.body.classList.toggle('light-mode', isLight);
+            document.getElementById('theme-icon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            Storage.set('theme', isLight ? 'light' : 'dark');
+        }
+
+        function init() {
+            const saved = Storage.get('theme');
+            apply(saved === 'light');
+
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                apply(!document.body.classList.contains('light-mode'));
+                Analytics.track('theme_toggle', { theme: document.body.classList.contains('light-mode') ? 'light' : 'dark' });
+            });
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: Typewriter
+    ============================================================ */
+    const Typewriter = (() => {
+        const PHRASES = [
+            'work smarter.',
+            'decide faster.',
+            'serve customers better.',
+            'build with confidence.',
+            'drive innovation.',
+        ];
+        let phraseIdx = 0, charIdx = 0, deleting = false;
+        const el = document.getElementById('typewriter');
+        let timer = null;
+
+        function tick() {
+            const phrase = PHRASES[phraseIdx];
+
+            if (!deleting) {
+                charIdx++;
+                el.textContent = phrase.slice(0, charIdx);
+                if (charIdx === phrase.length) {
+                    deleting = true;
+                    timer = setTimeout(tick, 2200);
+                    return;
+                }
+            } else {
+                charIdx--;
+                el.textContent = phrase.slice(0, charIdx);
+                if (charIdx === 0) {
+                    deleting = false;
+                    phraseIdx = (phraseIdx + 1) % PHRASES.length;
+                }
+            }
+
+            timer = setTimeout(tick, deleting ? 48 : 72);
+        }
+
+        function init() {
+            if (!el) return;
+            timer = setTimeout(tick, 600);
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: Countdown Timer
+    ============================================================ */
+    const Countdown = (() => {
+        const DEADLINE = new Date('2026-06-30T23:59:59+05:30'); // IST
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        function animateTick(elId) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.classList.remove('tick');
+            void el.offsetWidth; // reflow
+            el.classList.add('tick');
+        }
+
+        function update() {
+            const now = new Date();
+            const diff = DEADLINE - now;
+
+            if (diff <= 0) {
+                ['cd-d','cd-h','cd-m','cd-s'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '00';
+                });
+                return;
+            }
+
+            const days  = Math.floor(diff / 864e5);
+            const hours = Math.floor((diff % 864e5) / 36e5);
+            const mins  = Math.floor((diff % 36e5) / 6e4);
+            const secs  = Math.floor((diff % 6e4) / 1e3);
+
+            const d = document.getElementById('cd-d');
+            const h = document.getElementById('cd-h');
+            const m = document.getElementById('cd-m');
+            const s = document.getElementById('cd-s');
+
+            if (d && d.textContent !== pad(days))  { d.textContent = pad(days);  animateTick('cd-days'); }
+            if (h && h.textContent !== pad(hours)) { h.textContent = pad(hours); animateTick('cd-hours'); }
+            if (m && m.textContent !== pad(mins))  { m.textContent = pad(mins);  animateTick('cd-mins'); }
+            if (s && s.textContent !== pad(secs))  { s.textContent = pad(secs);  animateTick('cd-secs'); }
+        }
+
+        function init() {
+            update();
+            setInterval(update, 1000);
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: Animated Counters (stats)
+    ============================================================ */
+    const Counters = (() => {
+        function animateCounter(el, target, duration = 1200) {
+            let start = null;
+            function step(ts) {
+                if (!start) start = ts;
+                const progress = Math.min((ts - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * target);
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(step);
+        }
+
+        function init() {
+            // Triggered when stats section enters viewport
+            const statNums = document.querySelectorAll('.stat-num[data-target]');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        animateCounter(el, parseInt(el.dataset.target, 10));
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.4 });
+            statNums.forEach(el => observer.observe(el));
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: ScrollReveal
+    ============================================================ */
+    const ScrollReveal = (() => {
+        let observer;
+
+        function createObserver() {
+            observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        }
+
+        function refresh() {
+            document.querySelectorAll('.reveal:not(.visible), .reveal-stagger:not(.visible)').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        function init() {
+            createObserver();
+            refresh();
+        }
+
+        return { init, refresh };
+    })();
+
+    /* ============================================================
+       MODULE: Particles (canvas background)
+    ============================================================ */
+    const Particles = (() => {
+        let canvas, ctx, particles = [], animId;
+
+        function resize() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: Math.random() * 1.5 + 0.5,
+                alpha: Math.random() * 0.6 + 0.2,
+                hue: Math.random() > 0.7 ? 45 : 210, // yellow or blue
+            };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height)  p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${p.hue},80%,70%,${p.alpha})`;
+                ctx.fill();
+
+                // Connect nearby particles
+                for (let j = i + 1; j < particles.length; j++) {
+                    const q = particles[j];
+                    const dx = p.x - q.x, dy = p.y - q.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 90) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = `hsla(210,80%,70%,${0.12 * (1 - dist/90)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            });
+            animId = requestAnimationFrame(draw);
+        }
+
+        function init() {
+            canvas = document.getElementById('particle-canvas');
+            if (!canvas || !canvas.getContext) return;
+            ctx = canvas.getContext('2d');
+            resize();
+            const COUNT = Math.min(60, Math.floor(window.innerWidth / 20));
+            particles = Array.from({ length: COUNT }, createParticle);
+            draw();
+            window.addEventListener('resize', resize);
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: IframeLoader — lazy load + skeleton
+    ============================================================ */
+    const IframeLoader = (() => {
+        let loaded = false;
+
+        function load() {
+            if (loaded) return;
+            loaded = true;
+            const iframe = document.getElementById('submission-iframe');
+            const skeleton = document.getElementById('iframe-skeleton');
+            if (!iframe) return;
+
+            iframe.addEventListener('load', () => {
+                if (skeleton) skeleton.classList.add('hidden');
+                Analytics.track('form_loaded');
+                // Fire confetti
+                Confetti.burst();
+            }, { once: true });
+
+            iframe.src = iframe.dataset.src;
+        }
+
+        return { load };
+    })();
+
+    /* ============================================================
+       MODULE: Gallery — idea cards from mock data
+    ============================================================ */
+    const Gallery = (() => {
+        const IDEAS = [
+            { title: 'AI-Powered Defect Detection in Manufacturing', category: 'ops', tag: 'AI For Ops', desc: 'Use computer vision to detect tyre surface defects in real-time on the production line, reducing manual inspection time by 70%.', votes: 24, author: 'Team Vulcan' },
+            { title: 'Intelligent Code Review Assistant', category: 'sdlc', tag: 'AI for SDLC', desc: 'LLM-powered tool that reviews PRs, suggests improvements, enforces coding standards, and explains complex logic to junior devs.', votes: 31, author: 'Team Nexus' },
+            { title: 'Customer Sentiment Analytics Dashboard', category: 'biz', tag: 'AI For Business', desc: 'Aggregate feedback from all channels and use NLP to surface trending issues, sentiment shifts, and product improvement signals.', votes: 18, author: 'Team Horizon' },
+            { title: 'Predictive Maintenance Scheduler', category: 'ops', tag: 'AI For Ops', desc: 'ML model trained on sensor data to predict equipment failures 72 hours in advance, minimising unplanned downtime.', votes: 29, author: 'Team Forge' },
+            { title: 'Automated Test Case Generator', category: 'sdlc', tag: 'AI for SDLC', desc: 'Generate unit and integration tests from natural language user stories using fine-tuned LLMs, cutting QA prep time by half.', votes: 22, author: 'Team Quantum' },
+            { title: 'AI Sales Pitch Personaliser', category: 'biz', tag: 'AI For Business', desc: 'Analyse prospect data and auto-draft personalised pitch decks and emails tailored to each client segment and geography.', votes: 15, author: 'Team Catalyst' },
+        ];
+
+        const TAG_CLASS = { sdlc: 'tag-sdlc', ops: 'tag-ops', biz: 'tag-biz' };
+        let rendered = false;
+
+        function render() {
+            if (rendered) return;
+            rendered = true;
+            const grid = document.getElementById('gallery-grid');
+            if (!grid) return;
+
+            grid.innerHTML = IDEAS.map(idea => `
+                <div class="card idea-card">
+                    <span class="idea-tag ${TAG_CLASS[idea.category]}">${idea.tag}</span>
+                    <div class="idea-title">${idea.title}</div>
+                    <p style="font-size:0.88rem;margin:0">${idea.desc}</p>
+                    <div class="idea-footer">
+                        <span>${idea.author}</span>
+                        <span class="idea-votes">
+                            <i class="fas fa-heart" aria-hidden="true"></i> ${idea.votes}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        return { render };
+    })();
+
+    /* ============================================================
+       MODULE: FAQ
+    ============================================================ */
+    const FAQ = (() => {
+        const ITEMS = [
+            { q: 'Who can participate?',          a: 'The Hackfest is open to all BS/EC employees and eligible partners involved in digital or business teams.' },
+            { q: 'Do I need to be an AI expert?', a: 'Not at all! We welcome business, operations, and functional experts. AI mentors and resources will be available throughout the challenge to support you.' },
+            { q: 'Can I submit more than one idea?', a: 'Yes. You may submit multiple ideas, but please ensure each is clearly differentiated and can be evaluated independently.' },
+            { q: 'What kind of ideas are encouraged?', a: 'Ideas that improve efficiency, safety, customer experience, quality, or sustainability using AI and data are strongly encouraged across any of the three tracks.' },
+            { q: 'How are ideas judged?',          a: 'A panel of senior leaders and AI experts will evaluate ideas on innovation, feasibility, business impact, and clarity of the AI approach.' },
+            { q: 'What happens after I submit?',   a: 'Shortlisted teams will be invited to pitch their ideas in a live session. Finalists receive mentorship to build a prototype for the grand demo day.' },
+            { q: 'Is team participation mandatory?', a: 'No. You can participate solo or in a team of up to 4 members. Cross-functional teams are highly encouraged.' },
+        ];
+
+        let rendered = false;
+
+        function render() {
+            if (rendered) return;
+            rendered = true;
+            const list = document.getElementById('faq-list');
+            if (!list) return;
+
+            list.innerHTML = ITEMS.map((item, i) => `
+                <div class="faq-item" role="listitem">
+                    <button
+                        class="faq-question"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="faq-answer-${i}"
+                        id="faq-btn-${i}">
+                        <span class="label">${item.q}</span>
+                        <span class="faq-icon" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                    </button>
+                    <div
+                        class="faq-answer"
+                        id="faq-answer-${i}"
+                        role="region"
+                        aria-labelledby="faq-btn-${i}">
+                        <p>${item.a}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Attach accordion behaviour
+            list.querySelectorAll('.faq-question').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const item = btn.closest('.faq-item');
                     const open = item.classList.contains('open');
 
-                    document.querySelectorAll('.faq-item.open').forEach(i => {
-                        if (i !== item) i.classList.remove('open');
+                    list.querySelectorAll('.faq-item.open').forEach(i => {
+                        i.classList.remove('open');
+                        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
                     });
 
-                    if (open) {
-                        item.classList.remove('open');
-                    } else {
+                    if (!open) {
                         item.classList.add('open');
+                        btn.setAttribute('aria-expanded', 'true');
+                        Analytics.track('faq_opened', { question: btn.querySelector('.label').textContent });
                     }
                 });
-            });
-            
-            // Handle initial URL hash
-            if (window.location.hash) {
-                const sectionId = window.location.hash.substring(1);
-                showSection(sectionId);
-            }
-        });
-        
-        function showSection(sectionId) {
-            // Hide only top-level sections (home, about, submit, faq)
-            ['home', 'about', 'submit', 'faq'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
 
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.style.display = 'block';
-                window.scrollTo(0, 0);
-            } else {
-                const home = document.getElementById('home');
-                if (home) home.style.display = 'block';
+                // Keyboard: Enter / Space handled natively by button
+            });
+        }
+
+        return { render };
+    })();
+
+    /* ============================================================
+       MODULE: Confetti
+    ============================================================ */
+    const Confetti = (() => {
+        const COLORS = ['#005bbb','#ffc909','#fff','#22c55e','#f97316','#e879f9'];
+
+        function burst() {
+            const container = document.getElementById('confetti-container');
+            if (!container) return;
+            const N = 60;
+            for (let i = 0; i < N; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    background: ${COLORS[Math.floor(Math.random() * COLORS.length)]};
+                    animation-duration: ${1.5 + Math.random() * 2}s;
+                    animation-delay: ${Math.random() * 0.8}s;
+                    transform: rotate(${Math.random() * 360}deg);
+                    width: ${6 + Math.random() * 8}px;
+                    height: ${10 + Math.random() * 12}px;
+                `;
+                container.appendChild(piece);
+                piece.addEventListener('animationend', () => piece.remove());
             }
         }
+
+        return { burst };
+    })();
+
+    /* ============================================================
+       MODULE: ProgressBanner — persist user name via localStorage
+    ============================================================ */
+    const ProgressBanner = (() => {
+        function init() {
+            const visits = (Storage.get('visit_count') || 0) + 1;
+            Storage.set('visit_count', visits);
+
+            if (visits > 1) {
+                const banner = document.getElementById('progress-banner');
+                if (banner) banner.style.display = 'flex';
+            }
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       BOOT — initialise all modules on DOMContentLoaded
+    ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+        ThemeToggle.init();
+        MobileNav.init();
+        Router.init();
+        Typewriter.init();
+        Countdown.init();
+        Counters.init();
+        ScrollReveal.init();
+        Particles.init();
+        ProgressBanner.init();
+
+        // Close mobile nav on outside click
+        document.addEventListener('click', e => {
+            const nav = document.getElementById('mobile-nav');
+            const btn = document.getElementById('hamburger');
+            if (nav && nav.classList.contains('open') && !nav.contains(e.target) && !btn.contains(e.target)) {
+                MobileNav.close();
+            }
+        });
+
+        Analytics.track('app_boot', { hash: location.hash });
+    });
     </script>
 </body>
 </html>
