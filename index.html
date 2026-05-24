@@ -740,7 +740,7 @@
         }
 
         /* ============================================================
-           FAQ
+           FAQ & CONTACT
         ============================================================ */
         .faq-list { display: grid; gap: 10px; }
 
@@ -791,6 +791,77 @@
         }
 
         .faq-item.open .faq-answer { padding-bottom: 16px; max-height: 300px; }
+
+        /* ============================================================
+           CONTACT ORGANIZERS
+        ============================================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 28px;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, var(--surface-soft), rgba(0,18,43,0.98));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 18px 45px rgba(2,6,23,0.9);
+            backdrop-filter: blur(22px);
+            transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: "";
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at top left, rgba(0,91,187,0.22), transparent 55%);
+            pointer-events: none;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 26px 65px rgba(2,6,23,1);
+            border-color: rgba(0,91,187,0.9);
+        }
+
+        .contact-icon {
+            font-size: 2.8rem;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .contact-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+
+        .contact-email {
+            font-size: 0.95rem;
+            color: var(--muted);
+            word-break: break-all;
+            margin-bottom: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .contact-email a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-email a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
 
         /* ============================================================
            FOOTER
@@ -909,6 +980,7 @@
                     <li><a href="#about"   data-section="about"   class="nav-link">About</a></li>
                     <li><a href="#submit"  data-section="submit"  class="nav-link">Submit</a></li>
                     <li><a href="#faq"     data-section="faq"     class="nav-link">FAQ</a></li>
+                    <li><a href="#contact" data-section="contact" class="nav-link">Contact</a></li>
                 </ul>
 
                 <div class="nav-controls">
@@ -927,6 +999,7 @@
                 <a href="#about"   data-section="about"   class="mobile-link">ℹ️ About</a>
                 <a href="#submit"  data-section="submit"  class="mobile-link">🚀 Submit Idea</a>
                 <a href="#faq"     data-section="faq"     class="mobile-link">❓ FAQ</a>
+                <a href="#contact" data-section="contact" class="mobile-link">📧 Contact</a>
             </nav>
         </div>
     </header>
@@ -1003,52 +1076,6 @@
                 </div>
             </section>
 
-            <!-- WAVE DIVIDER -->
-            <div class="wave-divider" aria-hidden="true">
-                <svg viewBox="0 0 1200 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="50" width="100%">
-                    <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z"
-                          fill="rgba(0,91,187,0.08)"/>
-                </svg>
-            </div>
-
-            <!-- COUNTDOWN -->
-            <section class="countdown-section" aria-labelledby="countdown-heading">
-                <div class="container">
-                    <div class="section-label" aria-hidden="true">
-                        <i class="fas fa-clock"></i> Time Remaining
-                    </div>
-                    <h2 id="countdown-heading" class="reveal">Submission Deadline</h2>
-                    <p class="reveal" style="transition-delay:0.1s">Ideas accepted until <strong style="color:#e5e7eb">30 June 2026 at 23:59 IST</strong>. Don't miss your chance!</p>
-
-                    <div class="countdown-wrapper reveal-stagger" id="countdown" aria-label="Countdown timer" aria-live="polite">
-                        <div class="countdown-unit" id="cd-days">
-                            <span class="countdown-num" id="cd-d">--</span>
-                            <span class="countdown-label">Days</span>
-                        </div>
-                        <div class="countdown-unit" id="cd-hours">
-                            <span class="countdown-num" id="cd-h">--</span>
-                            <span class="countdown-label">Hours</span>
-                        </div>
-                        <div class="countdown-unit" id="cd-mins">
-                            <span class="countdown-num" id="cd-m">--</span>
-                            <span class="countdown-label">Minutes</span>
-                        </div>
-                        <div class="countdown-unit" id="cd-secs">
-                            <span class="countdown-num" id="cd-s">--</span>
-                            <span class="countdown-label">Seconds</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- WAVE DIVIDER 2 -->
-            <div class="wave-divider" aria-hidden="true">
-                <svg viewBox="0 0 1200 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="40" width="100%">
-                    <path d="M0,0 C300,50 900,10 1200,40 L1200,60 L0,60 Z"
-                          fill="rgba(255,201,9,0.06)"/>
-                </svg>
-            </div>
-
         </div>
 
         <!-- ==========================
@@ -1070,47 +1097,32 @@
                         <div class="feature card">
                             <div class="feature-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
                             <h3>Collaborate</h3>
-                            <p>Work with like-minded colleagues and form teams to develop innovative solutions.</p>
+                            <p>Work across teams and departments to build diverse, powerful solutions.</p>
                         </div>
                         <div class="feature card">
                             <div class="feature-icon"><i class="fas fa-trophy" aria-hidden="true"></i></div>
-                            <h3>Win Prizes</h3>
-                            <p>Get recognition for your ideas and win exciting prizes for the most innovative solutions.</p>
+                            <h3>Win Recognition</h3>
+                            <p>Top ideas receive prizes, mentorship, and a path to implementation.</p>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            <!-- Wave -->
-            <div class="wave-divider" aria-hidden="true">
-                <svg viewBox="0 0 1200 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="40" width="100%">
-                    <path d="M0,25 C400,50 800,0 1200,25 L1200,50 L0,50 Z" fill="rgba(0,91,187,0.07)"/>
-                </svg>
-            </div>
-
-            <!-- WHY PARTICIPATE -->
-            <section aria-labelledby="why-heading">
-                <div class="container">
-                    <div class="section-label"><i class="fas fa-star"></i> Why Join</div>
-                    <h2 id="why-heading" class="reveal">Why Participate?</h2>
-                    <p class="reveal" style="transition-delay:0.1s">This is more than a competition — it's a career-defining moment to shape the future of our organisation.</p>
-
+                    <h2 style="margin-top:60px;margin-bottom:16px;">Why Participate?</h2>
                     <div class="why-grid reveal-stagger">
                         <div class="why-item">
-                            <h4><i class="fas fa-rocket" style="color:var(--secondary);margin-right:8px"></i>Accelerate Your Career</h4>
-                            <p>Get visibility with leadership and accelerate your professional growth by leading an AI initiative from idea to prototype.</p>
+                            <h4><i class="fas fa-bolt" aria-hidden="true" style="color:var(--secondary);"></i> Fast Learning</h4>
+                            <p>Accelerate your AI expertise in a structured, 2-day sprint.</p>
                         </div>
                         <div class="why-item">
-                            <h4><i class="fas fa-network-wired" style="color:var(--secondary);margin-right:8px"></i>Build Real Impact</h4>
-                            <p>Winning ideas get sponsored for full implementation — your prototype could become the next big product feature.</p>
+                            <h4><i class="fas fa-network-wired" aria-hidden="true" style="color:var(--secondary);"></i> Network</h4>
+                            <p>Connect with innovators and thought leaders across BS/EC.</p>
                         </div>
                         <div class="why-item">
-                            <h4><i class="fas fa-brain" style="color:var(--secondary);margin-right:8px"></i>Learn From Experts</h4>
-                            <p>Access AI mentors, workshops and resources throughout the challenge — no prior AI expertise required.</p>
+                            <h4><i class="fas fa-star" aria-hidden="true" style="color:var(--secondary);"></i> Visibility</h4>
+                            <p>Showcase your work to leadership and gain career momentum.</p>
                         </div>
                         <div class="why-item">
-                            <h4><i class="fas fa-medal" style="color:var(--secondary);margin-right:8px"></i>Win Exciting Prizes</h4>
-                            <p>Top three teams receive recognition awards, innovation certificates, and exclusive SMARTEC swag.</p>
+                            <h4><i class="fas fa-rocket" aria-hidden="true" style="color:var(--secondary);"></i> Impact</h4>
+                            <p>Turn ideas into reality with executive sponsorship & resources.</p>
                         </div>
                     </div>
                 </div>
@@ -1118,17 +1130,17 @@
         </div>
 
         <!-- ==========================
-             IDEAS GALLERY PAGE
+             GALLERY PAGE
         ========================== -->
         <div id="page-gallery" class="page" role="main">
             <section aria-labelledby="gallery-heading">
                 <div class="container">
-                    <div class="section-label"><i class="fas fa-th"></i> Idea Gallery</div>
-                    <h2 id="gallery-heading">Inspiration Board</h2>
-                    <p>Browse sample ideas from past participants to spark your own innovation. These are illustrative examples — we encourage entirely original thinking!</p>
+                    <div class="section-label"><i class="fas fa-images"></i> Gallery</div>
+                    <h2 id="gallery-heading">Featured AI Ideas</h2>
+                    <p>Explore a curated collection of winning and finalist ideas from previous challenges.</p>
 
-                    <div class="gallery-grid reveal-stagger" id="gallery-grid">
-                        <!-- Populated by JS from mock JSON -->
+                    <div class="gallery-grid reveal-stagger" id="gallery-grid" role="list">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </section>
@@ -1140,12 +1152,11 @@
         <div id="page-submit" class="page" role="main">
             <section aria-labelledby="submit-heading">
                 <div class="container">
-                    <div class="section-label"><i class="fas fa-paper-plane"></i> Submit</div>
-                    <h2 id="submit-heading">Submit Your Idea</h2>
-                    <p>Got an AI-powered idea that could transform our operations? We want to hear it.</p>
+                    <div class="section-label"><i class="fas fa-pencil-alt"></i> Submit</div>
+                    <h2 id="submit-heading">Submit Your AI Idea</h2>
+                    <p style="margin-bottom:28px;">Have a brilliant AI-powered idea? We want to hear it! Share your concept below and join the innovation movement.</p>
 
-                    <!-- Progress banner (shown if user has visited before) -->
-                    <div class="progress-banner" id="progress-banner" style="display:none">
+                    <div id="progress-banner" class="progress-banner reveal" style="display:none;">
                         <i class="fas fa-history" aria-hidden="true"></i>
                         <span>Welcome back, <strong id="progress-name">innovator</strong>! Ready to submit your idea?</span>
                     </div>
@@ -1175,34 +1186,24 @@
                     <!-- CTA strip before form -->
                     <div class="form-cta-strip reveal" style="transition-delay:0.1s">
                         <p>🚀 <strong style="color:#e5e7eb">Ready to innovate?</strong> Fill out the form below — it takes about 5 minutes.</p>
-                        <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u"
-                           target="_blank" rel="noopener noreferrer"
-                           class="btn btn-ghost"
-                           onclick="Analytics.track('form_newtab_click')"
-                           aria-label="Open submission form in new tab"
-                           style="background-color: purple; color: white;">
-                            <i class="fas fa-external-link-alt" aria-hidden="true"></i> Open in New Tab
-                        </a>
                     </div>
 
-                    <!-- Iframe with skeleton loader -->
-                    <div class="card" style="padding:14px;" role="region" aria-label="Submission form">
-                        <div class="iframe-wrapper">
-                            <div class="iframe-skeleton" id="iframe-skeleton" aria-hidden="true">
-                                <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--muted)"></i>
-                                <span class="iframe-skeleton-text">Loading submission form…</span>
-                            </div>
-                            <iframe
-                                id="submission-iframe"
-                                class="form-embed-frame"
-                                data-src="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u&embed=true"
-                                title="SMARTEC AI Hackfest Submission Form"
-                                frameborder="0"
-                                allowfullscreen
-                                aria-label="Microsoft Form for hackfest submissions"
-                                style="background-color: purple !important;">
-                            </iframe>
+                    <!-- Embedded form -->
+                    <div class="iframe-wrapper reveal" style="transition-delay:0.15s">
+                        <div class="iframe-skeleton" id="iframe-skeleton">
+                            <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--muted)"></i>
+                            <span class="iframe-skeleton-text">Loading submission form…</span>
                         </div>
+                        <iframe
+                            id="submission-iframe"
+                            class="form-embed-frame"
+                            data-src="https://forms.office.com/Pages/ResponsePage.aspx?id=l6GLZXNs6k-RvRx9jea_LAcvMqJhbRNJlklPT0El6IxUN1hWUFlZMEFSOFY2TjlRUUVRQ1FPSEQ0SS4u&embed=true"
+                            title="SMARTEC AI Hackfest Submission Form"
+                            frameborder="0"
+                            allowfullscreen
+                            aria-label="Microsoft Form for hackfest submissions"
+                            style="background-color: purple !important;">
+                        </iframe>
                     </div>
                 </div>
             </section>
@@ -1221,6 +1222,47 @@
 
                         <div class="faq-list" id="faq-list" role="list">
                             <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================
+             CONTACT PAGE
+        ========================== -->
+        <div id="page-contact" class="page" role="main">
+            <section aria-labelledby="contact-heading">
+                <div class="container">
+                    <div class="card">
+                        <div class="section-label"><i class="fas fa-envelope"></i> Contact</div>
+                        <h2 id="contact-heading">Get In Touch</h2>
+                        <p style="margin-bottom:28px;">Have questions about the hackfest? Reach out to our organizers for more information and support.</p>
+
+                        <div class="contact-grid reveal-stagger">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-tie" aria-hidden="true"></i>
+                                </div>
+                                <div class="contact-name">Kiran Chandergi</div>
+                                <div class="contact-email">
+                                    <i class="fas fa-envelope" aria-hidden="true" style="font-size:0.8rem;"></i>
+                                    <a href="mailto:kiran.chandergi@michelin.com">kiran.chandergi@michelin.com</a>
+                                </div>
+                                <p style="font-size:0.9rem;margin:0;">Hackfest Organizer & Innovation Lead</p>
+                            </div>
+
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-tie" aria-hidden="true"></i>
+                                </div>
+                                <div class="contact-name">Bastien Chaudet</div>
+                                <div class="contact-email">
+                                    <i class="fas fa-envelope" aria-hidden="true" style="font-size:0.8rem;"></i>
+                                    <a href="mailto:bastien.chaudet@michelin.com">bastien.chaudet@michelin.com</a>
+                                </div>
+                                <p style="font-size:0.9rem;margin:0;">Hackfest Organizer & Technical Mentor</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1275,7 +1317,7 @@
        MODULE: Router — SPA routing with smooth transitions
     ============================================================ */
     const Router = (() => {
-        const SECTIONS = ['home', 'about', 'gallery', 'submit', 'faq'];
+        const SECTIONS = ['home', 'about', 'gallery', 'submit', 'faq', 'contact'];
         let currentSection = 'home';
 
         function navigate(section, pushState = true) {
@@ -1349,198 +1391,75 @@
             });
 
             // Initial route from hash
-            const hash = location.hash.replace('#', '');
+            const hash = window.location.hash.slice(1);
             if (hash && SECTIONS.includes(hash)) {
                 navigate(hash, false);
-            } else {
-                updateNav('home');
             }
         }
 
-        return { init, navigate };
+        return { navigate, init };
     })();
 
     /* ============================================================
        MODULE: MobileNav
     ============================================================ */
     const MobileNav = (() => {
-        let open = false;
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('mobile-nav');
 
         function toggle() {
-            open = !open;
-            const nav = document.getElementById('mobile-nav');
-            const btn = document.getElementById('hamburger');
-            nav.classList.toggle('open', open);
-            btn.setAttribute('aria-expanded', open);
-            btn.querySelector('i').className = open ? 'fas fa-times' : 'fas fa-bars';
+            const isOpen = nav.classList.contains('open');
+            if (isOpen) close();
+            else open();
+        }
+
+        function open() {
+            nav.classList.add('open');
+            hamburger.setAttribute('aria-expanded', 'true');
         }
 
         function close() {
-            open = false;
-            document.getElementById('mobile-nav').classList.remove('open');
-            const btn = document.getElementById('hamburger');
-            btn.setAttribute('aria-expanded', 'false');
-            btn.querySelector('i').className = 'fas fa-bars';
+            nav.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
         }
 
         function init() {
-            document.getElementById('hamburger').addEventListener('click', toggle);
+            if (hamburger) hamburger.addEventListener('click', toggle);
         }
 
-        return { init, close };
+        return { open, close, init };
     })();
 
     /* ============================================================
        MODULE: ThemeToggle
     ============================================================ */
     const ThemeToggle = (() => {
-        function apply(isLight) {
-            document.body.classList.toggle('light-mode', isLight);
-            document.getElementById('theme-icon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            Storage.set('theme', isLight ? 'light' : 'dark');
+        const btn = document.getElementById('theme-toggle');
+        const icon = document.getElementById('theme-icon');
+        const THEME_KEY = 'smartec-theme';
+
+        function getTheme() {
+            return Storage.get(THEME_KEY, 'dark');
+        }
+
+        function setTheme(theme) {
+            const isDark = theme === 'dark';
+            document.body.classList.toggle('light-mode', !isDark);
+            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            Storage.set(THEME_KEY, theme);
+            Analytics.track('theme_changed', { theme });
+        }
+
+        function toggle() {
+            const current = getTheme();
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
         }
 
         function init() {
-            const saved = Storage.get('theme');
-            apply(saved === 'light');
-
-            document.getElementById('theme-toggle').addEventListener('click', () => {
-                apply(!document.body.classList.contains('light-mode'));
-                Analytics.track('theme_toggle', { theme: document.body.classList.contains('light-mode') ? 'light' : 'dark' });
-            });
-        }
-
-        return { init };
-    })();
-
-    /* ============================================================
-       MODULE: Typewriter
-    ============================================================ */
-    const Typewriter = (() => {
-        const PHRASES = [
-            'work smarter.',
-            'decide faster.',
-            'serve customers better.',
-            'build with confidence.',
-            'drive innovation.',
-        ];
-        let phraseIdx = 0, charIdx = 0, deleting = false;
-        const el = document.getElementById('typewriter');
-        let timer = null;
-
-        function tick() {
-            const phrase = PHRASES[phraseIdx];
-
-            if (!deleting) {
-                charIdx++;
-                el.textContent = phrase.slice(0, charIdx);
-                if (charIdx === phrase.length) {
-                    deleting = true;
-                    timer = setTimeout(tick, 2200);
-                    return;
-                }
-            } else {
-                charIdx--;
-                el.textContent = phrase.slice(0, charIdx);
-                if (charIdx === 0) {
-                    deleting = false;
-                    phraseIdx = (phraseIdx + 1) % PHRASES.length;
-                }
-            }
-
-            timer = setTimeout(tick, deleting ? 48 : 72);
-        }
-
-        function init() {
-            if (!el) return;
-            timer = setTimeout(tick, 600);
-        }
-
-        return { init };
-    })();
-
-    /* ============================================================
-       MODULE: Countdown Timer
-    ============================================================ */
-    const Countdown = (() => {
-        const DEADLINE = new Date('2026-06-30T23:59:59+05:30'); // IST
-
-        function pad(n) { return String(n).padStart(2, '0'); }
-
-        function animateTick(elId) {
-            const el = document.getElementById(elId);
-            if (!el) return;
-            el.classList.remove('tick');
-            void el.offsetWidth; // reflow
-            el.classList.add('tick');
-        }
-
-        function update() {
-            const now = new Date();
-            const diff = DEADLINE - now;
-
-            if (diff <= 0) {
-                ['cd-d','cd-h','cd-m','cd-s'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.textContent = '00';
-                });
-                return;
-            }
-
-            const days  = Math.floor(diff / 864e5);
-            const hours = Math.floor((diff % 864e5) / 36e5);
-            const mins  = Math.floor((diff % 36e5) / 6e4);
-            const secs  = Math.floor((diff % 6e4) / 1e3);
-
-            const d = document.getElementById('cd-d');
-            const h = document.getElementById('cd-h');
-            const m = document.getElementById('cd-m');
-            const s = document.getElementById('cd-s');
-
-            if (d && d.textContent !== pad(days))  { d.textContent = pad(days);  animateTick('cd-days'); }
-            if (h && h.textContent !== pad(hours)) { h.textContent = pad(hours); animateTick('cd-hours'); }
-            if (m && m.textContent !== pad(mins))  { m.textContent = pad(mins);  animateTick('cd-mins'); }
-            if (s && s.textContent !== pad(secs))  { s.textContent = pad(secs);  animateTick('cd-secs'); }
-        }
-
-        function init() {
-            update();
-            setInterval(update, 1000);
-        }
-
-        return { init };
-    })();
-
-    /* ============================================================
-       MODULE: Animated Counters (stats)
-    ============================================================ */
-    const Counters = (() => {
-        function animateCounter(el, target, duration = 1200) {
-            let start = null;
-            function step(ts) {
-                if (!start) start = ts;
-                const progress = Math.min((ts - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.floor(eased * target);
-                if (progress < 1) requestAnimationFrame(step);
-                else el.textContent = target;
-            }
-            requestAnimationFrame(step);
-        }
-
-        function init() {
-            // Triggered when stats section enters viewport
-            const statNums = document.querySelectorAll('.stat-num[data-target]');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target;
-                        animateCounter(el, parseInt(el.dataset.target, 10));
-                        observer.unobserve(el);
-                    }
-                });
-            }, { threshold: 0.4 });
-            statNums.forEach(el => observer.observe(el));
+            const saved = getTheme();
+            setTheme(saved);
+            if (btn) btn.addEventListener('click', toggle);
         }
 
         return { init };
@@ -1550,102 +1469,38 @@
        MODULE: ScrollReveal
     ============================================================ */
     const ScrollReveal = (() => {
-        let observer;
+        const revealed = new Set();
 
-        function createObserver() {
-            observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        function isInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
         }
 
-        function refresh() {
-            document.querySelectorAll('.reveal:not(.visible), .reveal-stagger:not(.visible)').forEach(el => {
-                observer.observe(el);
+        function check() {
+            document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => {
+                if (!revealed.has(el) && isInViewport(el)) {
+                    el.classList.add('visible');
+                    revealed.add(el);
+                }
             });
         }
 
+        function refresh() {
+            revealed.clear();
+            check();
+        }
+
         function init() {
-            createObserver();
-            refresh();
+            check();
+            window.addEventListener('scroll', check);
+            window.addEventListener('resize', check);
         }
 
         return { init, refresh };
     })();
 
     /* ============================================================
-       MODULE: Particles (canvas background)
-    ============================================================ */
-    const Particles = (() => {
-        let canvas, ctx, particles = [], animId;
-
-        function resize() {
-            canvas.width  = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function createParticle() {
-            return {
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                r: Math.random() * 1.5 + 0.5,
-                alpha: Math.random() * 0.6 + 0.2,
-                hue: Math.random() > 0.7 ? 45 : 210, // yellow or blue
-            };
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy;
-                if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
-                if (p.y < 0 || p.y > canvas.height)  p.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${p.hue},80%,70%,${p.alpha})`;
-                ctx.fill();
-
-                // Connect nearby particles
-                for (let j = i + 1; j < particles.length; j++) {
-                    const q = particles[j];
-                    const dx = p.x - q.x, dy = p.y - q.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 90) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(q.x, q.y);
-                        ctx.strokeStyle = `hsla(210,80%,70%,${0.12 * (1 - dist/90)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                }
-            });
-            animId = requestAnimationFrame(draw);
-        }
-
-        function init() {
-            canvas = document.getElementById('particle-canvas');
-            if (!canvas || !canvas.getContext) return;
-            ctx = canvas.getContext('2d');
-            resize();
-            const COUNT = Math.min(60, Math.floor(window.innerWidth / 20));
-            particles = Array.from({ length: COUNT }, createParticle);
-            draw();
-            window.addEventListener('resize', resize);
-        }
-
-        return { init };
-    })();
-
-    /* ============================================================
-       MODULE: IframeLoader — lazy load + skeleton
+       MODULE: IframeLoader (lazy-load embedded forms)
     ============================================================ */
     const IframeLoader = (() => {
         let loaded = false;
@@ -1657,30 +1512,73 @@
             const skeleton = document.getElementById('iframe-skeleton');
             if (!iframe) return;
 
+            const src = iframe.dataset.src;
+            iframe.src = src;
+
+            // Hide skeleton when iframe loads
             iframe.addEventListener('load', () => {
                 if (skeleton) skeleton.classList.add('hidden');
-                Analytics.track('form_loaded');
-                // Fire confetti
-                Confetti.burst();
             }, { once: true });
 
-            iframe.src = iframe.dataset.src;
+            Analytics.track('form_loaded');
         }
 
         return { load };
     })();
 
     /* ============================================================
-       MODULE: Gallery — idea cards from mock data
+       MODULE: Typewriter Effect
+    ============================================================ */
+    const Typewriter = (() => {
+        const WORDS = ['work', 'learn', 'build', 'innovate', 'transform'];
+        let index = 0;
+        let letterIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const el = document.getElementById('typewriter');
+            if (!el) return;
+
+            const currentWord = WORDS[index];
+            const isEnd = letterIndex === currentWord.length;
+
+            if (isEnd) {
+                isDeleting = true;
+                setTimeout(type, 2000);
+                return;
+            }
+
+            if (isDeleting) {
+                letterIndex--;
+            } else {
+                letterIndex++;
+            }
+
+            el.textContent = currentWord.substring(0, letterIndex);
+
+            if (isDeleting && letterIndex === 0) {
+                isDeleting = false;
+                index = (index + 1) % WORDS.length;
+            }
+
+            setTimeout(type, isDeleting ? 50 : 80);
+        }
+
+        function init() {
+            setTimeout(type, 500);
+        }
+
+        return { init };
+    })();
+
+    /* ============================================================
+       MODULE: Gallery
     ============================================================ */
     const Gallery = (() => {
         const IDEAS = [
-            { title: 'AI-Powered Defect Detection in Manufacturing', category: 'ops', tag: 'AI For Ops', desc: 'Use computer vision to detect tyre surface defects in real-time on the production line, reducing manual inspection time by 70%.', votes: 24, author: 'Team Vulcan' },
-            { title: 'Intelligent Code Review Assistant', category: 'sdlc', tag: 'AI for SDLC', desc: 'LLM-powered tool that reviews PRs, suggests improvements, enforces coding standards, and explains complex logic to junior devs.', votes: 31, author: 'Team Nexus' },
-            { title: 'Customer Sentiment Analytics Dashboard', category: 'biz', tag: 'AI For Business', desc: 'Aggregate feedback from all channels and use NLP to surface trending issues, sentiment shifts, and product improvement signals.', votes: 18, author: 'Team Horizon' },
-            { title: 'Predictive Maintenance Scheduler', category: 'ops', tag: 'AI For Ops', desc: 'ML model trained on sensor data to predict equipment failures 72 hours in advance, minimising unplanned downtime.', votes: 29, author: 'Team Forge' },
-            { title: 'Automated Test Case Generator', category: 'sdlc', tag: 'AI for SDLC', desc: 'Generate unit and integration tests from natural language user stories using fine-tuned LLMs, cutting QA prep time by half.', votes: 22, author: 'Team Quantum' },
-            { title: 'AI Sales Pitch Personaliser', category: 'biz', tag: 'AI For Business', desc: 'Analyse prospect data and auto-draft personalised pitch decks and emails tailored to each client segment and geography.', votes: 15, author: 'Team Catalyst' },
+            { title: 'AI Code Reviewer', desc: 'Automated code quality checks using LLMs for SDLC acceleration.', author: 'Dev Team', votes: 124, category: 'sdlc', tag: 'AI for SDLC' },
+            { title: 'Predictive Maintenance', desc: 'ML model to predict equipment failures before they happen.', author: 'Ops Team', votes: 98, category: 'ops', tag: 'AI for Ops' },
+            { title: 'Smart Contract Manager', desc: 'AI-powered contract analysis and risk assessment tool.', author: 'Legal x AI', votes: 156, category: 'biz', tag: 'AI for Business' },
         ];
 
         const TAG_CLASS = { sdlc: 'tag-sdlc', ops: 'tag-ops', biz: 'tag-biz' };
@@ -1716,11 +1614,9 @@
     const FAQ = (() => {
         const ITEMS = [
             { q: 'Who can participate?',          a: 'The Hackfest is open to all BS/EC employees and eligible partners involved in digital or business teams.' },
-            { q: 'Do I need to be an AI expert?', a: 'Not at all! We welcome business, operations, and functional experts. AI mentors and resources will be available throughout the challenge to support you.' },
-            { q: 'Can I submit more than one idea?', a: 'Yes. You may submit multiple ideas, but please ensure each is clearly differentiated and can be evaluated independently.' },
-            { q: 'What kind of ideas are encouraged?', a: 'Ideas that improve efficiency, safety, customer experience, quality, or sustainability using AI and data are strongly encouraged across any of the three tracks.' },
-            { q: 'How are ideas judged?',          a: 'A panel of senior leaders and AI experts will evaluate ideas on innovation, feasibility, business impact, and clarity of the AI approach.' },
-            { q: 'What happens after I submit?',   a: 'Shortlisted teams will be invited to pitch their ideas in a live session. Finalists receive mentorship to build a prototype for the grand demo day.' },
+            { q: 'What is the submission deadline?', a: 'Ideas must be submitted by 30 June 2026. Late submissions will not be accepted.' },
+            { q: 'Can I work alone or must I be in a team?', a: 'You can participate solo or in a team of up to 4 members. We encourage diverse, cross-functional teams.' },
+            { q: 'What technologies should I use?', a: 'You\'re free to use any AI/ML framework, cloud platform, or tool. We provide resources and mentorship regardless of tech stack.' },
             { q: 'Is team participation mandatory?', a: 'No. You can participate solo or in a team of up to 4 members. Cross-functional teams are highly encouraged.' },
         ];
 
@@ -1787,21 +1683,15 @@
         function burst() {
             const container = document.getElementById('confetti-container');
             if (!container) return;
-            const N = 60;
-            for (let i = 0; i < N; i++) {
+
+            for (let i = 0; i < 50; i++) {
                 const piece = document.createElement('div');
                 piece.className = 'confetti-piece';
-                piece.style.cssText = `
-                    left: ${Math.random() * 100}%;
-                    background: ${COLORS[Math.floor(Math.random() * COLORS.length)]};
-                    animation-duration: ${1.5 + Math.random() * 2}s;
-                    animation-delay: ${Math.random() * 0.8}s;
-                    transform: rotate(${Math.random() * 360}deg);
-                    width: ${6 + Math.random() * 8}px;
-                    height: ${10 + Math.random() * 12}px;
-                `;
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.backgroundColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+                piece.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
                 container.appendChild(piece);
-                piece.addEventListener('animationend', () => piece.remove());
+                setTimeout(() => piece.remove(), 4500);
             }
         }
 
@@ -1809,47 +1699,84 @@
     })();
 
     /* ============================================================
-       MODULE: ProgressBanner — persist user name via localStorage
+       MODULE: Particles Canvas
     ============================================================ */
-    const ProgressBanner = (() => {
-        function init() {
-            const visits = (Storage.get('visit_count') || 0) + 1;
-            Storage.set('visit_count', visits);
+    const ParticleCanvas = (() => {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let particles = [];
 
-            if (visits > 1) {
-                const banner = document.getElementById('progress-banner');
-                if (banner) banner.style.display = 'flex';
+        function init() {
+            if (!canvas || !ctx) return;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    color: `rgba(0,91,187,${Math.random() * 0.3 + 0.1})`,
+                });
             }
+
+            animate();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
         }
 
         return { init };
     })();
 
     /* ============================================================
-       BOOT — initialise all modules on DOMContentLoaded
+       APP INIT
     ============================================================ */
-    document.addEventListener('DOMContentLoaded', () => {
-        ThemeToggle.init();
-        MobileNav.init();
+    function appInit() {
         Router.init();
-        Typewriter.init();
-        Countdown.init();
-        Counters.init();
+        MobileNav.init();
+        ThemeToggle.init();
         ScrollReveal.init();
-        Particles.init();
-        ProgressBanner.init();
+        Typewriter.init();
+        ParticleCanvas.init();
 
-        // Close mobile nav on outside click
-        document.addEventListener('click', e => {
-            const nav = document.getElementById('mobile-nav');
-            const btn = document.getElementById('hamburger');
-            if (nav && nav.classList.contains('open') && !nav.contains(e.target) && !btn.contains(e.target)) {
-                MobileNav.close();
+        // Submit form tracking
+        document.addEventListener('submit', (e) => {
+            if (e.target.closest('.form-embed-frame')) {
+                Analytics.track('form_submitted');
+                Confetti.burst();
             }
         });
+    }
 
-        Analytics.track('app_boot', { hash: location.hash });
-    });
+    // Start when DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', appInit);
+    } else {
+        appInit();
+    }
     </script>
 </body>
 </html>
